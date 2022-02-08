@@ -1,8 +1,14 @@
 <template>
   <div class="app-container">
     <el-form ref="form" :model="form" label-width="120px">
-      <el-form-item label="Activity name">
-        <el-input v-model="form.name" />
+      <el-form-item label="门店" required>
+        <el-input v-model="form.shop" />
+      </el-form-item>
+      <el-form-item label="活动名称" required>
+        <el-input v-model="form.title" />
+      </el-form-item>
+      <el-form-item label="主办方电话" required>
+        <el-input v-model="form.tel" />
       </el-form-item>
       <el-form-item label="Activity zone">
         <el-select v-model="form.region" placeholder="please select your zone">
@@ -12,11 +18,21 @@
       </el-form-item>
       <el-form-item label="Activity time">
         <el-col :span="11">
-          <el-date-picker v-model="form.date1" type="date" placeholder="Pick a date" style="width: 100%;" />
+          <el-date-picker
+            v-model="form.date1"
+            type="date"
+            placeholder="Pick a date"
+            style="width: 100%;"
+          />
         </el-col>
         <el-col :span="2" class="line">-</el-col>
         <el-col :span="11">
-          <el-time-picker v-model="form.date2" type="fixed-time" placeholder="Pick a time" style="width: 100%;" />
+          <el-time-picker
+            v-model="form.date2"
+            type="fixed-time"
+            placeholder="Pick a time"
+            style="width: 100%;"
+          />
         </el-col>
       </el-form-item>
       <el-form-item label="Instant delivery">
@@ -44,15 +60,29 @@
         <el-button @click="onCancel">Cancel</el-button>
       </el-form-item>
     </el-form>
+    <image-cropper
+      v-show="imagecropperShow"
+      :key="imagecropperKey"
+      :width="300"
+      :height="300"
+      url="https://httpbin.org/post"
+      lang-type="en"
+      @close="close"
+      @crop-upload-success="cropSuccess"
+    />
   </div>
 </template>
 
 <script>
+import ImageCropper from '@/components/ImageCropper'
 export default {
+  components: { ImageCropper },
   data() {
     return {
       form: {
-        name: '',
+        shop: '',
+        title: '',
+        tel: '',
         region: '',
         date1: '',
         date2: '',
@@ -60,7 +90,9 @@ export default {
         type: [],
         resource: '',
         desc: ''
-      }
+      },
+      imagecropperShow: false,
+      imagecropperKey: 0
     }
   },
   methods: {
@@ -72,13 +104,21 @@ export default {
         message: 'cancel!',
         type: 'warning'
       })
+    },
+    cropSuccess(resData) {
+      this.imagecropperShow = false
+      this.imagecropperKey = this.imagecropperKey + 1
+      this.image = resData.files.avatar
+    },
+    close() {
+      this.imagecropperShow = false
     }
   }
 }
 </script>
 
 <style scoped>
-.line{
+.line {
   text-align: center;
 }
 </style>

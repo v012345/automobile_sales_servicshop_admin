@@ -15,12 +15,7 @@
         style="width: 90px"
         class="filter-item"
       >
-        <el-option
-          v-for="item in roleOptions"
-          :key="item.key"
-          :label="item.key"
-          :value="item.key"
-        />
+        <el-option v-for="item in roleOptions" :key="item.key" :label="item.key" :value="item.key" />
       </el-select>
       <el-select
         v-model="listQuery.permission"
@@ -49,7 +44,7 @@
           :label="item"
           :value="item"
         />
-      </el-select> -->
+      </el-select>-->
       <!-- <el-select
         v-model="listQuery.type"
         placeholder="Type"
@@ -63,7 +58,7 @@
           :label="item.display_name + '(' + item.key + ')'"
           :value="item.key"
         />
-      </el-select> -->
+      </el-select>-->
       <el-select
         v-model="listQuery.sort"
         style="width: 140px"
@@ -83,9 +78,7 @@
         type="primary"
         icon="el-icon-search"
         @click="handleFilter"
-      >
-        Search
-      </el-button>
+      >Search</el-button>
       <!-- <el-button
         class="filter-item"
         style="margin-left: 10px"
@@ -94,7 +87,7 @@
         @click="handleCreate"
       >
         Add
-      </el-button> -->
+      </el-button>-->
       <el-button
         v-waves
         :loading="downloadLoading"
@@ -102,9 +95,7 @@
         type="primary"
         icon="el-icon-download"
         @click="handleDownload"
-      >
-        Export
-      </el-button>
+      >Export</el-button>
       <!-- <el-checkbox
         v-model="showReviewer"
         class="filter-item"
@@ -112,7 +103,7 @@
         @change="tableKey = tableKey + 1"
       >
         reviewer
-      </el-checkbox> -->
+      </el-checkbox>-->
     </div>
 
     <el-table
@@ -138,46 +129,42 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="Name" align="center">
+      <el-table-column label="名字" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Avatar" width="110px" align="center">
+      <el-table-column label="头像" align="center">
         <template slot-scope="{ row }">
-          <el-image
-            style="width: 40px; height: 40px"
-            :src="row.avatar"
-            fit="fit"
-          />
+          <el-image style="width: 40px; height: 40px" :src="row.avatar" fit="fit" />
         </template>
       </el-table-column>
-      <el-table-column label="Inviter" width="110px" align="center">
+      <el-table-column label="邀请人" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.inviter }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Permission" width="110px" align="center">
+      <el-table-column label="限权" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.permission }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Phone" width="110px" align="center">
+      <el-table-column label="电话" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.phone_number }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Role" width="110px" align="center">
+      <el-table-column label="角色" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.role }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Gender" width="110px" align="center">
+      <el-table-column label="性别" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.gender }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Date" width="150px" align="center">
+      <el-table-column label="关注时间" width="200px" align="center">
         <template slot-scope="{ row }">
           <!-- <span>{{ row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span> -->
           <span>{{ row.created_at }}</span>
@@ -190,7 +177,7 @@
           }}</span>
           <el-tag>{{ row.type | typeFilter }}</el-tag>
         </template>
-      </el-table-column> -->
+      </el-table-column>-->
 
       <!-- <el-table-column label="Imp" width="80px">
         <template slot-scope="{ row }">
@@ -201,7 +188,7 @@
             class="meta-item__icon"
           />
         </template>
-      </el-table-column> -->
+      </el-table-column>-->
       <!-- <el-table-column label="Readings" align="center" width="95">
         <template slot-scope="{ row }">
           <span
@@ -212,28 +199,17 @@
           >
           <span v-else>0</span>
         </template>
-      </el-table-column> -->
+      </el-table-column>-->
       <!-- <el-table-column label="Status" class-name="status-col" width="100">
         <template slot-scope="{ row }">
           <el-tag :type="row.status | statusFilter">
             {{ row.status }}
           </el-tag>
         </template>
-      </el-table-column> -->
-      <el-table-column
-        label="Actions"
-        align="center"
-        width="110px"
-        class-name="small-padding fixed-width"
-      >
+      </el-table-column>-->
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="{ row, $index }">
-          <el-button
-            type="primary"
-            size="mini"
-            @click="handleUpdate(row, $index)"
-          >
-            Edit
-          </el-button>
+          <el-button type="primary" size="mini" @click="handleUpdate(row, $index)">编辑</el-button>
           <!-- <el-button
             v-if="row.status != 'published'"
             size="mini"
@@ -256,7 +232,7 @@
             @click="handleDelete(row, $index)"
           >
             Delete
-          </el-button> -->
+          </el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -278,11 +254,7 @@
         style="width: 400px; margin-left: 50px"
       >
         <el-form-item label="Role" prop="role">
-          <el-select
-            v-model="temp.role"
-            class="filter-item"
-            placeholder="Please select"
-          >
+          <el-select v-model="temp.role" class="filter-item" placeholder="Please select">
             <el-option
               v-for="item in roleOptions"
               :key="item.key"
@@ -292,11 +264,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="权限" prop="permission">
-          <el-select
-            v-model="temp.permission"
-            class="filter-item"
-            placeholder="Please select"
-          >
+          <el-select v-model="temp.permission" class="filter-item" placeholder="Please select">
             <el-option
               v-for="item in permissionOptions"
               :key="item.key"
@@ -307,13 +275,11 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false"> Cancel </el-button>
+        <el-button @click="dialogFormVisible = false">Cancel</el-button>
         <el-button
           type="primary"
           @click="dialogStatus === 'create' ? createData() : updateData()"
-        >
-          Confirm
-        </el-button>
+        >Confirm</el-button>
       </div>
     </el-dialog>
 
@@ -390,23 +356,15 @@
           Confirm
         </el-button>
       </div>
-    </el-dialog> -->
+    </el-dialog>-->
 
     <el-dialog :visible.sync="dialogPvVisible" title="Reading statistics">
-      <el-table
-        :data="pvData"
-        border
-        fit
-        highlight-current-row
-        style="width: 100%"
-      >
+      <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
         <el-table-column prop="key" label="Channel" />
         <el-table-column prop="pv" label="Pv" />
       </el-table>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogPvVisible = false"
-          >Confirm</el-button
-        >
+        <el-button type="primary" @click="dialogPvVisible = false">Confirm</el-button>
       </span>
     </el-dialog>
   </div>

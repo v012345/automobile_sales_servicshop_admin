@@ -63,7 +63,7 @@ export const constantRoutes = [
       name: 'Users',
       component: () => import('@/views/users/index'),
       meta: {
-        title: 'Users',
+        title: '用户',
         icon: 'user'
       }
     }]
@@ -77,8 +77,34 @@ export const constantRoutes = [
       name: 'Activities',
       component: () => import('@/views/activities/index'),
       meta: {
-        title: 'Activities',
-        icon: 'el-icon-star-on'
+        title: '活动',
+        icon: 'star'
+      }
+    }]
+  },
+  {
+    path: '/participants',
+    component: Layout,
+    children: [{
+      path: '/participants',
+      name: 'Participants',
+      component: () => import('@/views/participants/index'),
+      meta: {
+        title: '参与者',
+        icon: 'peoples'
+      }
+    }]
+  },
+  {
+    path: '/demo',
+    component: Layout,
+    children: [{
+      path: '/demo',
+      name: 'Demo',
+      component: () => import('@/views/demo/avatar-upload'),
+      meta: {
+        title: 'Demo',
+        icon: 'el-icon-s-help'
       }
     }]
   },
@@ -107,14 +133,14 @@ export const constantRoutes = [
   // },
 
   {
-    path: '/form',
+    path: '/creation',
     component: Layout,
     children: [
       {
         path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
+        name: 'Creation',
+        component: () => import('@/views/creation/index'),
+        meta: { title: '创建活动', icon: 'form' }
       }
     ]
   },

@@ -7,9 +7,16 @@ export function fetchList(query) {
   //   params: query
   // })
   return request({
-    url: '/vue-admin-template/activities/list',
+    url: '/vue-admin-template/participants/list',
     method: 'get',
     params: query
+  })
+}
+
+export function fetchActivities() {
+  return request({
+    url: '/vue-admin-template/activities/id-title',
+    method: 'get'
   })
 }
 

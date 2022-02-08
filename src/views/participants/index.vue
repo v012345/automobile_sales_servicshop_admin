@@ -3,31 +3,36 @@
     <div class="filter-container">
       <el-input
         v-model="listQuery.id"
-        placeholder="User Id"
+        placeholder="Id"
         style="width: 200px"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
       <el-select
-        v-model="listQuery.role"
-        placeholder="Role"
+        v-model="listQuery.activity"
+        placeholder="活动"
         clearable
-        style="width: 90px"
-        class="filter-item"
-      >
-        <el-option v-for="item in roleOptions" :key="item.key" :label="item.key" :value="item.key" />
-      </el-select>
-      <el-select
-        v-model="listQuery.permission"
-        placeholder="权限"
-        clearable
-        style="width: 90px"
+        style="width: 200px"
         class="filter-item"
       >
         <el-option
-          v-for="item in permissionOptions"
+          v-for="item in activityOptions"
+          :key="item.id"
+          :label="item.title"
+          :value="item.id"
+        />
+      </el-select>
+      <el-select
+        v-model="listQuery.coupon"
+        placeholder="是否有券"
+        clearable
+        style="width: 200px"
+        class="filter-item"
+      >
+        <el-option
+          v-for="item in couponOptions"
           :key="item.key"
-          :label="item.key"
+          :label="item.display_name"
           :value="item.key"
         />
       </el-select>
@@ -128,90 +133,40 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="活动" width="200px" align="center">
+      <el-table-column label="名字" align="center">
         <template slot-scope="{ row }">
-          <div>标题: {{ row.title }}</div>
-          <div>报名费: {{ row.signing_up_fee }}</div>
-          <div>介绍: {{ row.description }}</div>
+          <div>{{ row.participant_info.name }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="主办方" width="300px" align="center">
+      <el-table-column label="Avatar" align="center">
         <template slot-scope="{ row }">
-          <div>门店: {{ row.shop }}</div>
-          <div>地点: {{ row.address }}</div>
-          <div>电话: {{ row.tel }}</div>
+          <el-image style="width: 40px; height: 40px" :src="row.participant_info.avatar" fit="fit" />
         </template>
       </el-table-column>
-      <el-table-column label="活动时间" width="300px" align="center">
+      <el-table-column label="电话" align="center">
         <template slot-scope="{ row }">
-          <div>生成时间: {{ row.created_at }}</div>
-          <div>核销开始: {{ row.allow_to_use_at }}</div>
-          <div>优惠券失效: {{ row.expire_at }}</div>
-          <div>报名截止: {{ row.end_at }}</div>
-          <div>活动举办: {{ row.start_at }}</div>
+          <div>{{ row.phone_number }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="参与者" width="150px" align="center">
+      <el-table-column label="车型" align="center">
         <template slot-scope="{ row }">
-          <router-link :to="{ path: '/participants', query: { activity: row.id, coupon: true } }">
-            <div>购买人数: {{ row.coupons_count }}</div>
-          </router-link>
-          <router-link :to="{ path: '/participants', query: { activity: row.id } }">
-            <div>关注人数: {{ row.participants_count }}</div>
-          </router-link>
+          <div>{{ row.car_model }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="海报" align="center" width="120px">
+      <el-table-column label="牌照" align="center">
         <template slot-scope="{ row }">
-          <el-image
-            v-if="row.poster"
-            style="width: 60px; height: 120px"
-            :src="$backend + row.poster"
-            fit="fit"
-            :preview-src-list="[$backend + row.poster]"
-          />
+          <div>{{ row.license_plate_number }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="宣传图" align="center">
+      <el-table-column label="优惠券" align="center">
         <template slot-scope="{ row }">
-          <el-image
-            v-for="(image, i) in row.propaganda_images"
-            :key="i"
-            :src="$backend + image"
-            style="width: 30px; height: 30px"
-            fit="fit"
-            :preview-src-list="[$backend + image]"
-          />
+          <div>{{ row.coupons_count }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="宣传视频" width="420px" align="center">
-        <template slot-scope="{ row }">
-          <span v-if="row.video">
-            <video
-              preload="auto"
-              width="380px"
-              controls="controls"
-              x5-video-player-fullscreen="false"
-              x5-playsinline
-              playsinline
-              webkit-playsinline="true"
-              :poster="$backend + row.video_thumbnail"
-            >
-              <source :src="$backend + row.video" type="video/mp4" />
-            </video>
-          </span>
-        </template>
-      </el-table-column>
-
-      <el-table-column
-        label="Actions"
-        align="center"
-        width="110px"
-        class-name="small-padding fixed-width"
-      >
+      <!-- <el-table-column label="Actions" align="center" class-name="small-padding fixed-width">
         <template slot-scope="{ row, $index }">
           <el-button type="primary" size="mini" @click="handleUpdate(row, $index)">Edit</el-button>
-          <!-- <el-button
+          <el-button
             v-if="row.status != 'published'"
             size="mini"
             type="success"
@@ -233,9 +188,9 @@
             @click="handleDelete(row, $index)"
           >
             Delete
-          </el-button>-->
+          </el-button>
         </template>
-      </el-table-column>
+      </el-table-column>-->
     </el-table>
 
     <pagination
@@ -415,7 +370,7 @@
 </template>
 
 <script>
-import { fetchList, fetchPv, createArticle, updateUser } from '@/api/activities'
+import { fetchList, fetchPv, createArticle, updateUser, fetchActivities } from '@/api/participants'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -439,9 +394,9 @@ const roleOptions = [
   { key: 'leader', display_name: 'leader' }
 ]
 
-const permissionOptions = [
-  { key: 'user', display_name: 'user' },
-  { key: 'employee', display_name: 'employee' }
+const couponOptions = [
+  { key: 'true', display_name: '是' },
+  { key: 'false', display_name: '否' }
 ]
 
 export default {
@@ -468,6 +423,7 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
+        activity: undefined,
         page: 1,
         limit: 20,
         importance: undefined,
@@ -476,10 +432,12 @@ export default {
         role: undefined,
         permission: undefined,
         type: undefined,
-        sort: '+id'
+        sort: '+id',
+        coupon: 'false'
       },
       roleOptions,
-      permissionOptions,
+      activityOptions: [],
+      couponOptions,
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
       sortOptions: [
@@ -525,7 +483,20 @@ export default {
     }
   },
   created() {
-    this.getList()
+    // console.log(this.$route.query.activity)
+    fetchActivities().then((response) => {
+      this.activityOptions = response.data
+      if (this.$route.query.activity) {
+        this.listQuery.activity = this.$route.query.activity
+        localStorage.activity = this.$route.query.activity
+      } else {
+        this.listQuery.activity = parseInt(localStorage.activity)
+      }
+      if (this.$route.query.coupon) {
+        localStorage.coupon = this.$route.query.coupon.toString()
+      }
+      this.getList()
+    })
   },
   methods: {
     getList() {
@@ -541,6 +512,7 @@ export default {
       })
     },
     handleFilter() {
+      console.log(this.listQuery)
       this.listQuery.page = 1
       this.getList()
     },
