@@ -95,19 +95,19 @@ export const constantRoutes = [
       }
     }]
   },
-  {
-    path: '/demo',
-    component: Layout,
-    children: [{
-      path: '/demo',
-      name: 'Demo',
-      component: () => import('@/views/demo/avatar-upload'),
-      meta: {
-        title: 'Demo',
-        icon: 'el-icon-s-help'
-      }
-    }]
-  },
+  // {
+  //   path: '/demo',
+  //   component: Layout,
+  //   children: [{
+  //     path: '/demo',
+  //     name: 'Demo',
+  //     component: () => import('@/views/demo/avatar-upload'),
+  //     meta: {
+  //       title: 'Demo',
+  //       icon: 'el-icon-s-help'
+  //     }
+  //   }]
+  // },
 
   // {
   //   path: '/example',

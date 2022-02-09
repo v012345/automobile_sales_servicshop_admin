@@ -39,6 +39,7 @@ new Vue({
   el: '#app',
   created() {
     Vue.prototype.$backend = process.env.VUE_APP_BASE_BACKEND
+    Vue.prototype.$api = process.env.VUE_APP_BASE_API
   },
   router,
   store,

@@ -10,6 +10,32 @@
       <el-form-item label="主办方电话" required>
         <el-input v-model="form.tel" />
       </el-form-item>
+      <el-form-item label="海报">
+        <el-button type="primary" icon="el-icon-upload" @click="imagecropperShow = true">上传海报</el-button>
+        <br />
+        <template v-if="form.poster">
+          <el-image style="height: 120px" :src="$backend + form.poster" fit="fit" />
+        </template>
+      </el-form-item>
+      <el-form-item label="视频">
+        <el-button type="primary" icon="el-icon-upload" @click="uploadVideoShow = true">上传视频</el-button>
+        <el-button type="primary" icon="el-icon-upload" @click="uploadThumbnailShow = true">上传封面</el-button>
+        <br />
+        <template v-if="form.video">
+          <video
+            preload="auto"
+            width="380px"
+            controls="controls"
+            x5-video-player-fullscreen="false"
+            x5-playsinline
+            playsinline
+            webkit-playsinline="true"
+            :poster="$backend + form.thumbnail"
+          >
+            <source :src="$backend + form.video" type="video/mp4" />
+          </video>
+        </template>
+      </el-form-item>
       <el-form-item label="Activity zone">
         <el-select v-model="form.region" placeholder="please select your zone">
           <el-option label="Zone one" value="shanghai" />
@@ -60,26 +86,43 @@
         <el-button @click="onCancel">Cancel</el-button>
       </el-form-item>
     </el-form>
-    <image-cropper
+    <Upload
       v-show="imagecropperShow"
-      :key="imagecropperKey"
-      :width="300"
-      :height="300"
-      url="https://httpbin.org/post"
-      lang-type="en"
+      :url="$api + '/poster/upload'"
+      field="poster"
       @close="close"
-      @crop-upload-success="cropSuccess"
+      @crop-upload-success="posterUploadSuccess"
+    />
+    <Upload
+      v-show="uploadThumbnailShow"
+      :url="$api + '/thumbnail/upload'"
+      field="thumbnail"
+      @close="close"
+      @crop-upload-success="thumbnailUploadSuccess"
+    />
+    <Upload
+      v-show="uploadVideoShow"
+      :url="$api + '/video/upload'"
+      field="video"
+      img-format="mp4"
+      @close="close"
+      @crop-upload-success="videoUploadSuccess"
     />
   </div>
 </template>
 
 <script>
-import ImageCropper from '@/components/ImageCropper'
+import Upload from '@/components/Upload'
+
 export default {
-  components: { ImageCropper },
+  components: { Upload },
   data() {
     return {
       form: {
+        poster: undefined,
+        thumbnail: undefined,
+        video: undefined,
+        images: {},
         shop: '',
         title: '',
         tel: '',
@@ -92,10 +135,14 @@ export default {
         desc: ''
       },
       imagecropperShow: false,
-      imagecropperKey: 0
+      imagecropperKey: 0,
+      uploadVideoShow: false,
+      thumbnail: false,
+      uploadThumbnailShow: false
     }
   },
   methods: {
+
     onSubmit() {
       this.$message('submit!')
     },
@@ -105,13 +152,22 @@ export default {
         type: 'warning'
       })
     },
-    cropSuccess(resData) {
+    posterUploadSuccess(resData) {
       this.imagecropperShow = false
-      this.imagecropperKey = this.imagecropperKey + 1
-      this.image = resData.files.avatar
+      this.form.poster = resData
+    },
+    thumbnailUploadSuccess(resData) {
+      this.uploadThumbnailShow = false
+      this.form.thumbnail = resData
+    },
+    videoUploadSuccess(resData) {
+      this.uploadVideoShow = false
+      this.form.video = resData
     },
     close() {
       this.imagecropperShow = false
+      this.uploadThumbnailShow = false
+      this.uploadVideoShow = false
     }
   }
 }
