@@ -13,6 +13,14 @@ export function fetchList(query) {
   })
 }
 
+export function createActivity(data) {
+  return request({
+    url: '/vue-admin-template/activity/create',
+    method: 'post',
+    data
+  })
+}
+
 export function updateUser(data) {
   return request({
     url: '/vue-admin-template/user/update',
