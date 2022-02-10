@@ -128,30 +128,48 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="活动" width="200px" align="center">
+      <el-table-column label="活动" width="200" align="center">
+        <template slot-scope="{ row }">{{ row.title }}</template>
+      </el-table-column>
+      <el-table-column label="报名费" align="center">
+        <template slot-scope="{ row }">{{ row.signing_up_fee }}</template>
+      </el-table-column>
+      <el-table-column label="介绍" width="200" align="center">
+        <template slot-scope="{ row }">{{ row.description }}</template>
+      </el-table-column>
+      <el-table-column label="主办方" width="200" align="center">
         <template slot-scope="{ row }">
-          <div>标题: {{ row.title }}</div>
-          <div>报名费: {{ row.signing_up_fee }}</div>
-          <div>介绍: {{ row.description }}</div>
+          <div>{{ row.shop }}</div>
+          <div>{{ row.tel }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="主办方" width="300px" align="center">
+      <el-table-column label="地址" width="200" align="center">
+        <template slot-scope="{ row }">{{ row.address }}</template>
+      </el-table-column>
+      <el-table-column label="活动举办时间" width="200" align="center">
         <template slot-scope="{ row }">
-          <div>门店: {{ row.shop }}</div>
-          <div>地点: {{ row.address }}</div>
-          <div>电话: {{ row.tel }}</div>
+          <div>{{ row.start_at }}</div>
+          <div>到</div>
+          <div>{{ row.end_at }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="活动时间" width="300px" align="center">
+      <el-table-column label="报名时间" width="200" align="center">
         <template slot-scope="{ row }">
-          <div>生成时间: {{ row.created_at }}</div>
-          <div>核销开始: {{ row.allow_to_use_at }}</div>
-          <div>优惠券失效: {{ row.expire_at }}</div>
-          <div>报名截止: {{ row.end_at }}</div>
-          <div>活动举办: {{ row.start_at }}</div>
+          <div>{{ row.start_signing_up_at }}</div>
+          <div>到</div>
+          <div>{{ row.end_at }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="参与者" width="150px" align="center">
+
+      <el-table-column label="优惠券有效期" width="200" align="center">
+        <template slot-scope="{ row }">
+          <div>{{ row.allow_to_use_at }}</div>
+          <div>到</div>
+          <div>{{ row.expire_at }}</div>
+        </template>
+      </el-table-column>
+
+      <el-table-column label="参与者" width="140" align="center">
         <template slot-scope="{ row }">
           <router-link :to="{ path: '/participants', query: { activity: row.id, coupon: true } }">
             <div>购买人数: {{ row.coupons_count }}</div>
@@ -161,7 +179,16 @@
           </router-link>
         </template>
       </el-table-column>
-      <el-table-column label="海报" align="center" width="120px">
+      <el-table-column label="虚拟人数" width="140" align="center">
+        <template slot-scope="{ row }">
+          <div>购买人数: +{{ row.offset.coupons }}</div>
+          <div>关注人数: +{{ row.offset.participants }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="返利模式" align="center">
+        <template slot-scope="{ row }">{{ row.return_mode }}</template>
+      </el-table-column>
+      <!-- <el-table-column label="海报" align="center" width="120px">
         <template slot-scope="{ row }">
           <el-image
             v-if="row.poster"
@@ -201,16 +228,29 @@
             </video>
           </span>
         </template>
-      </el-table-column>
+      </el-table-column>-->
 
-      <el-table-column
-        label="Actions"
-        align="center"
-        width="110px"
-        class-name="small-padding fixed-width"
-      >
+      <el-table-column label="Actions" align="center" class-name="small-padding fixed-width">
         <template slot-scope="{ row, $index }">
-          <el-button type="primary" size="mini" @click="handleUpdate(row, $index)">Edit</el-button>
+          <div>
+            <el-button type="primary" size="mini" @click="handleUpdate(row, $index)">编辑</el-button>
+          </div>
+          <div>
+            <template>
+              <el-popconfirm
+                title="Are you sure to delete this?"
+                @onConfirm="handleDelete(row, $index)"
+              >
+                <el-button
+                  v-if="row.status != 'deleted'"
+                  slot="reference"
+                  size="mini"
+                  type="danger"
+                >删除</el-button>
+              </el-popconfirm>
+            </template>
+          </div>
+
           <!-- <el-button
             v-if="row.status != 'published'"
             size="mini"
@@ -257,37 +297,94 @@
         <el-form-item label-width="auto" label="标题" prop="title">
           <el-input v-model="temp.title" />
         </el-form-item>
-        <el-form-item label-width="auto" label="地点" prop="address">
-          <el-input v-model="temp.address" />
-        </el-form-item>
-        <el-form-item label-width="auto" label="核销开始时间" prop="allow_to_use_at">
-          <el-input v-model="temp.allow_to_use_at" />
-        </el-form-item>
         <el-form-item label-width="auto" label="介绍" prop="description">
           <el-input v-model="temp.description" />
         </el-form-item>
-        <el-form-item label-width="auto" label="报名截止时间" prop="end_at">
-          <el-input v-model="temp.end_at" />
+        <el-form-item label-width="auto" label="报名费" prop="signing_up_fee">
+          <el-input v-model.trim="temp.signing_up_fee" />
         </el-form-item>
-        <el-form-item label-width="auto" label="优惠券失效时间" prop="expire_at">
-          <el-input v-model="temp.expire_at" />
+        <el-form-item label-width="auto" label="地点" prop="address">
+          <el-input v-model="temp.address" />
+        </el-form-item>
+        <el-form-item label-width="auto" label="定位" prop="location">
+          <el-input v-model.trim="temp.location.longitude" />
+          <el-input v-model.trim="temp.location.latitude" />
         </el-form-item>
         <el-form-item label-width="auto" label="门店" prop="shop">
           <el-input v-model="temp.shop" />
         </el-form-item>
-        <el-form-item label-width="auto" label="报名费" prop="signing_up_fee">
-          <el-input v-model="temp.signing_up_fee" />
-        </el-form-item>
-        <el-form-item label-width="auto" label="活动举办时间" prop="end_at">
-          <el-input v-model="temp.start_at" />
-        </el-form-item>
         <el-form-item label-width="auto" label="主办方电话" prop="tel">
           <el-input v-model="temp.tel" />
         </el-form-item>
-        <el-form-item label-width="auto" label="视频封面" prop="video_thumbnail">
+
+        <el-form-item label-width="auto" label="开始报名时间" prop="end_at">
+          <el-date-picker
+            v-model="temp.start_signing_up_at"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            type="datetime"
+            placeholder="Select date and time"
+          />
+        </el-form-item>
+
+        <el-form-item label-width="auto" label="报名截止时间" prop="end_at">
+          <el-date-picker
+            v-model="temp.end_at"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            type="datetime"
+            placeholder="Select date and time"
+          />
+        </el-form-item>
+
+        <el-form-item label-width="auto" label="活动举办时间" prop="end_at">
+          <el-date-picker
+            v-model="temp.start_at"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            type="datetime"
+            placeholder="Select date and time"
+          />
+        </el-form-item>
+        <el-form-item label-width="auto" label="活动结束时间" prop="end_at">
+          <el-date-picker
+            v-model="temp.end_at"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            type="datetime"
+            placeholder="Select date and time"
+          />
+        </el-form-item>
+
+        <el-form-item label-width="auto" label="核销开始时间" prop="allow_to_use_at">
+          <el-date-picker
+            v-model="temp.allow_to_use_at"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            type="datetime"
+            placeholder="Select date and time"
+          />
+        </el-form-item>
+
+        <el-form-item label-width="auto" label="优惠券失效于" prop="expire_at">
+          <el-date-picker
+            v-model="temp.expire_at"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            type="datetime"
+            placeholder="Select date and time"
+          />
+        </el-form-item>
+        <el-form-item label-width="auto" label="虚拟人数" prop="location">
+          <el-input v-model.number.trim="temp.offset.coupons" />
+          <el-input v-model.number.trim="temp.offset.participants" />
+        </el-form-item>
+
+        <el-form-item label="返利模式">
+          <el-radio-group v-model="temp.return_mode">
+            <el-radio label="nothing">无</el-radio>
+            <el-radio label="2level">二级</el-radio>
+            <el-radio label="leader">团长</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <!-- <el-form-item label-width="auto" label="视频封面" prop="video_thumbnail">
           <el-input v-model="temp.video_thumbnail" />
           <el-image style="width: 200px" :src="$backend + temp.video_thumbnail" fit="fit" />
-        </el-form-item>
+        </el-form-item>-->
 
         <!-- <el-form-item label="Role" prop="role">
           <el-select
@@ -415,7 +512,7 @@
 </template>
 
 <script>
-import { fetchList, fetchPv, createArticle, updateUser } from '@/api/activities'
+import { fetchList, fetchPv, createArticle, deleteActivity, updateActivity } from '@/api/activities'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -495,7 +592,9 @@ export default {
         timestamp: new Date(),
         title: '',
         type: '',
-        status: 'published'
+        status: 'published',
+        location: {},
+        offset: {}
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -604,7 +703,7 @@ export default {
     },
     handleUpdate(row, index) {
       this.temp = Object.assign({}, row) // copy obj
-
+      // console.log(this.temp)
       // this.temp.timestamp = new Date(this.temp.timestamp)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
@@ -629,7 +728,7 @@ export default {
           //     duration: 2000
           //   })
           // })
-          updateUser(tempData).then(() => {
+          updateActivity(tempData).then(() => {
             const index = this.list.findIndex((v) => v.id === this.temp.id)
             this.list.splice(index, 1, this.temp)
             this.dialogFormVisible = false
@@ -644,13 +743,15 @@ export default {
       })
     },
     handleDelete(row, index) {
-      this.$notify({
-        title: 'Success',
-        message: 'Delete Successfully',
-        type: 'success',
-        duration: 2000
+      deleteActivity(row).then(() => {
+        this.$notify({
+          title: 'Success',
+          message: 'Delete Successfully',
+          type: 'success',
+          duration: 2000
+        })
+        this.list.splice(index, 1)
       })
-      this.list.splice(index, 1)
     },
     handleFetchPv(pv) {
       fetchPv(pv).then((response) => {

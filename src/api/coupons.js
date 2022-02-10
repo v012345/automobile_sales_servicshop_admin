@@ -7,33 +7,16 @@ export function fetchList(query) {
   //   params: query
   // })
   return request({
-    url: '/vue-admin-template/activities/list',
+    url: '/vue-admin-template/coupons/list',
     method: 'get',
     params: query
   })
 }
 
-export function createActivity(data) {
+export function fetchActivities() {
   return request({
-    url: '/vue-admin-template/activity/create',
-    method: 'post',
-    data
-  })
-}
-
-export function updateActivity(data) {
-  return request({
-    url: '/vue-admin-template/activity/update',
-    method: 'post',
-    data
-  })
-}
-
-export function deleteActivity(data) {
-  return request({
-    url: '/vue-admin-template/activity/delete',
-    method: 'post',
-    data
+    url: '/vue-admin-template/activities/id-title',
+    method: 'get'
   })
 }
 

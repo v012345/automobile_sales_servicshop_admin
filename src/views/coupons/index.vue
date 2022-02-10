@@ -133,34 +133,35 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="名字" align="center">
+      <el-table-column label="订单号" align="center">
         <template slot-scope="{ row }">
-          <div>{{ row.participant_info.name }}</div>
+          <div>{{ row.order_number }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="Avatar" align="center">
+      <el-table-column label="生成时间" align="center">
         <template slot-scope="{ row }">
-          <el-image style="width: 40px; height: 40px" :src="row.participant_info.avatar" fit="fit" />
+          <div>{{ row.created_at }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="电话" align="center">
+      <el-table-column label="所有者" align="center">
         <template slot-scope="{ row }">
-          <div>{{ row.phone_number }}</div>
+          <div>{{ row.participant.participant_info.name }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="车型" align="center">
+
+      <el-table-column label="活动" align="center">
         <template slot-scope="{ row }">
-          <div>{{ row.car_model }}</div>
+          <div>{{ row.activity.title }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="牌照" align="center">
+      <el-table-column label="类型" align="center">
         <template slot-scope="{ row }">
-          <div>{{ row.license_plate_number }}</div>
+          <div>{{ row.type }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="优惠券" align="center">
+      <el-table-column label="状态" align="center">
         <template slot-scope="{ row }">
-          <div>{{ row.coupons_count }}</div>
+          <div>{{ row.state }}</div>
         </template>
       </el-table-column>
       <!-- <el-table-column label="Actions" align="center" class-name="small-padding fixed-width">
@@ -370,7 +371,7 @@
 </template>
 
 <script>
-import { fetchList, fetchPv, createArticle, updateUser, fetchActivities } from '@/api/participants'
+import { fetchList, fetchPv, createArticle, updateUser, fetchActivities } from '@/api/coupons'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination

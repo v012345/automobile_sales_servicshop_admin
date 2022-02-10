@@ -78,7 +78,7 @@ export const constantRoutes = [
       component: () => import('@/views/activities/index'),
       meta: {
         title: '活动',
-        icon: 'star'
+        icon: 'el-icon-s-flag'
       }
     }]
   },
@@ -95,7 +95,47 @@ export const constantRoutes = [
       }
     }]
   },
-  // {
+  {
+    path: '/coupons',
+    component: Layout,
+    children: [{
+      path: '/coupons',
+      name: 'Coupons',
+      component: () => import('@/views/coupons/index'),
+      meta: {
+        title: '优惠券',
+        icon: 'el-icon-s-ticket'
+      }
+    }]
+  },
+  {
+    path: '/setting',
+    component: Layout,
+    children: [{
+      path: '/setting',
+      name: 'setting',
+      component: () => import('@/views/setting/index'),
+      meta: {
+        title: '设置',
+        icon: 'el-icon-s-tools'
+      }
+    }]
+  },
+  {
+    path: '/orders',
+    component: Layout,
+    children: [{
+      path: '/orders',
+      name: 'orders',
+      component: () => import('@/views/orders/index'),
+      meta: {
+        title: '订单',
+        icon: 'el-icon-s-order'
+      }
+    }]
+  },
+
+  // {el-icon-s-order
   //   path: '/demo',
   //   component: Layout,
   //   children: [{
@@ -140,7 +180,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'Creation',
         component: () => import('@/views/creation/index'),
-        meta: { title: '创建活动', icon: 'form' }
+        meta: { title: '创建活动', icon: 'el-icon-edit' }
       }
     ]
   },

@@ -370,7 +370,7 @@
 </template>
 
 <script>
-import { fetchList, fetchPv, createArticle, updateUser, fetchActivities } from '@/api/participants'
+import { fetchList, fetchPv, createArticle, updateUser, fetchActivities } from '@/api/orders'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination

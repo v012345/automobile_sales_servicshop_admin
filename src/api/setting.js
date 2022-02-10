@@ -7,15 +7,15 @@ export function fetchList(query) {
   //   params: query
   // })
   return request({
-    url: '/vue-admin-template/activities/list',
+    url: '/vue-admin-template/config/list',
     method: 'get',
     params: query
   })
 }
 
-export function createActivity(data) {
+export function updateConfig(data) {
   return request({
-    url: '/vue-admin-template/activity/create',
+    url: '/vue-admin-template/config/update',
     method: 'post',
     data
   })
@@ -29,13 +29,15 @@ export function updateActivity(data) {
   })
 }
 
-export function deleteActivity(data) {
+export function createActivity(data) {
   return request({
-    url: '/vue-admin-template/activity/delete',
+    url: '/vue-admin-template/activity/create',
     method: 'post',
     data
   })
 }
+
+
 
 export function updateUser(data) {
   return request({

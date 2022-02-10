@@ -48,8 +48,8 @@
         />
       </el-form-item>
       <el-form-item label="经纬度" required>
-        <el-input v-model="form.location.longitude" placeholder="经度" />
-        <el-input v-model="form.location.latitude" placeholder="纬度" />
+        <el-input v-model.trim="form.location.longitude" placeholder="经度" />
+        <el-input v-model.trim="form.location.latitude" placeholder="纬度" />
       </el-form-item>
       <el-form-item label="地址" required>
         <el-input v-model="form.address" />
@@ -86,7 +86,7 @@
         />
       </el-form-item>
       <el-form-item label="报名费">
-        <el-input v-model="form.signing_up_fee" />
+        <el-input v-model.number.trim="form.signing_up_fee" />
       </el-form-item>
       <el-form-item label="返利模式">
         <el-radio-group v-model="form.return_mode">
@@ -183,6 +183,7 @@ export default {
 
       createActivity(this.form).then((response) => {
         this.$message('成功')
+        this.$router.push('/activities/all')
       })
     },
     onCancel() {
