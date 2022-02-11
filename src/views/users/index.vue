@@ -159,7 +159,7 @@
           <span>{{ row.gender }}</span>
         </template>
       </el-table-column>-->
-      <el-table-column label="邀请人" align="center">
+      <el-table-column label="邀请人Id" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.inviter }}</span>
         </template>

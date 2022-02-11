@@ -1,5 +1,5 @@
 <template>
-  <div :class="className" :style="{height:height,width:width}" />
+  <div :class="className" :style="{ height: height, width: width }" />
 </template>
 
 <script>
@@ -90,7 +90,8 @@ export default {
           }
         },
         legend: {
-          data: ['expected', 'actual']
+          // data: ['expected', 'actual']
+          data: ['actual']
         },
         series: [{
           name: 'expected', itemStyle: {
