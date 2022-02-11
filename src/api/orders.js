@@ -7,7 +7,7 @@ export function fetchList(query) {
   //   params: query
   // })
   return request({
-    url: '/vue-admin-template/participants/list',
+    url: '/vue-admin-template/orders/list',
     method: 'get',
     params: query
   })

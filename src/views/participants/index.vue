@@ -158,6 +158,11 @@
           <div>{{ row.license_plate_number }}</div>
         </template>
       </el-table-column>
+      <el-table-column label="参与活动" align="center">
+        <template slot-scope="{ row }">
+          <div>{{ row.activiy.title }}</div>
+        </template>
+      </el-table-column>
       <el-table-column label="优惠券" align="center">
         <template slot-scope="{ row }">
           <div>{{ row.coupons_count }}</div>
@@ -433,7 +438,7 @@ export default {
         permission: undefined,
         type: undefined,
         sort: '+id',
-        coupon: 'false'
+        coupon: undefined
       },
       roleOptions,
       activityOptions: [],
@@ -441,8 +446,8 @@ export default {
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
       sortOptions: [
-        { label: 'ID Ascending', key: '+id' },
-        { label: 'ID Descending', key: '-id' }
+        { label: 'ID 升序', key: '+id' },
+        { label: 'ID 降序', key: '-id' }
       ],
       statusOptions: ['published', 'draft', 'deleted'],
       showReviewer: false,
@@ -490,11 +495,14 @@ export default {
         this.listQuery.activity = this.$route.query.activity
         localStorage.activity = this.$route.query.activity
       } else {
+        if (!response.data[parseInt(localStorage.activity)]) {
+          localStorage.activity = response.data[0].id
+        }
         this.listQuery.activity = parseInt(localStorage.activity)
       }
-      if (this.$route.query.coupon) {
-        localStorage.coupon = this.$route.query.coupon.toString()
-      }
+      // if (this.$route.query.coupon) {
+      //   localStorage.coupon = this.$route.query.coupon.toString()
+      // }
       // console.log(localStorage.activity, localStorage.coupon)
       this.getList()
     })
@@ -513,7 +521,11 @@ export default {
       })
     },
     handleFilter() {
-      console.log(this.listQuery)
+      // console.log(this.listQuery)
+      if (this.listQuery.activity) {
+        localStorage.activity = this.listQuery.activity
+      }
+
       this.listQuery.page = 1
       this.getList()
     },

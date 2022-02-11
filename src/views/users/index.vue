@@ -3,14 +3,14 @@
     <div class="filter-container">
       <el-input
         v-model="listQuery.id"
-        placeholder="User Id"
+        placeholder="用户Id"
         style="width: 200px"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
       <el-select
         v-model="listQuery.role"
-        placeholder="Role"
+        placeholder="角色"
         clearable
         style="width: 90px"
         class="filter-item"
@@ -139,16 +139,6 @@
           <el-image style="width: 40px; height: 40px" :src="row.avatar" fit="fit" />
         </template>
       </el-table-column>
-      <el-table-column label="邀请人" align="center">
-        <template slot-scope="{ row }">
-          <span>{{ row.inviter }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="限权" align="center">
-        <template slot-scope="{ row }">
-          <span>{{ row.permission }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="电话" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.phone_number }}</span>
@@ -159,9 +149,19 @@
           <span>{{ row.role }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="性别" align="center">
+      <el-table-column label="限权" align="center">
+        <template slot-scope="{ row }">
+          <span>{{ row.permission }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="性别" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.gender }}</span>
+        </template>
+      </el-table-column>-->
+      <el-table-column label="邀请人" align="center">
+        <template slot-scope="{ row }">
+          <span>{{ row.inviter }}</span>
         </template>
       </el-table-column>
       <el-table-column label="关注时间" width="200px" align="center">
@@ -253,7 +253,7 @@
         label-width="70px"
         style="width: 400px; margin-left: 50px"
       >
-        <el-form-item label="Role" prop="role">
+        <el-form-item label="角色" prop="role">
           <el-select v-model="temp.role" class="filter-item" placeholder="Please select">
             <el-option
               v-for="item in roleOptions"
@@ -449,8 +449,8 @@ export default {
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
       sortOptions: [
-        { label: 'ID Ascending', key: '+id' },
-        { label: 'ID Descending', key: '-id' }
+        { label: 'ID 升序', key: '+id' },
+        { label: 'ID 降序', key: '-id' }
       ],
       statusOptions: ['published', 'draft', 'deleted'],
       showReviewer: false,

@@ -3,12 +3,12 @@
     <div class="filter-container">
       <el-input
         v-model="listQuery.id"
-        placeholder="User Id"
+        placeholder="活动Id"
         style="width: 200px"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
-      <el-select
+      <!-- <el-select
         v-model="listQuery.role"
         placeholder="Role"
         clearable
@@ -30,7 +30,7 @@
           :label="item.key"
           :value="item.key"
         />
-      </el-select>
+      </el-select>-->
       <!-- <el-select
         v-model="listQuery.importance"
         placeholder="Imp"
@@ -232,7 +232,7 @@
 
       <el-table-column label="Actions" align="center" class-name="small-padding fixed-width">
         <template slot-scope="{ row, $index }">
-          <div>
+          <div style="margin-bottom:5px">
             <el-button type="primary" size="mini" @click="handleUpdate(row, $index)">编辑</el-button>
           </div>
           <div>
@@ -580,8 +580,8 @@ export default {
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
       sortOptions: [
-        { label: 'ID Ascending', key: '+id' },
-        { label: 'ID Descending', key: '-id' }
+        { label: 'ID 升序', key: '+id' },
+        { label: 'ID 降序', key: '-id' }
       ],
       statusOptions: ['published', 'draft', 'deleted'],
       showReviewer: false,

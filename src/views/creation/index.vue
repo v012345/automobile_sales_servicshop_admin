@@ -86,7 +86,7 @@
         />
       </el-form-item>
       <el-form-item label="报名费">
-        <el-input v-model.number.trim="form.signing_up_fee" />
+        <el-input v-model.trim="form.signing_up_fee" />
       </el-form-item>
       <el-form-item label="返利模式">
         <el-radio-group v-model="form.return_mode">

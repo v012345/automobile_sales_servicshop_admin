@@ -23,14 +23,14 @@
         />
       </el-select>
       <el-select
-        v-model="listQuery.coupon"
-        placeholder="是否有券"
+        v-model="listQuery.state"
+        placeholder="支付状态"
         clearable
         style="width: 200px"
         class="filter-item"
       >
         <el-option
-          v-for="item in couponOptions"
+          v-for="item in orderStateOptions"
           :key="item.key"
           :label="item.display_name"
           :value="item.key"
@@ -133,34 +133,29 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="名字" align="center">
+      <el-table-column label="订单号" align="center">
         <template slot-scope="{ row }">
-          <div>{{ row.participant_info.name }}</div>
+          <div>{{ row.order_number }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="Avatar" align="center">
+      <el-table-column label="用户Id" align="center">
         <template slot-scope="{ row }">
-          <el-image style="width: 40px; height: 40px" :src="row.participant_info.avatar" fit="fit" />
+          <div>{{ row.payer }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="电话" align="center">
+      <el-table-column label="活动Id" align="center">
         <template slot-scope="{ row }">
-          <div>{{ row.phone_number }}</div>
+          <div>{{ row.item }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="车型" align="center">
+      <el-table-column label="支付状态" align="center">
         <template slot-scope="{ row }">
-          <div>{{ row.car_model }}</div>
+          <div>{{ row.state }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="牌照" align="center">
+      <el-table-column label="生成时间" align="center">
         <template slot-scope="{ row }">
-          <div>{{ row.license_plate_number }}</div>
-        </template>
-      </el-table-column>
-      <el-table-column label="优惠券" align="center">
-        <template slot-scope="{ row }">
-          <div>{{ row.coupons_count }}</div>
+          <div>{{ row.created_at }}</div>
         </template>
       </el-table-column>
       <!-- <el-table-column label="Actions" align="center" class-name="small-padding fixed-width">
@@ -200,163 +195,6 @@
       :limit.sync="listQuery.limit"
       @pagination="getList"
     />
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form
-        ref="dataForm"
-        :rules="rules"
-        :model="temp"
-        label-position="left"
-        label-width="70px"
-        style="width: 400px; margin-left: 50px"
-      >
-        <el-form-item label-width="auto" label="标题" prop="title">
-          <el-input v-model="temp.title" />
-        </el-form-item>
-        <el-form-item label-width="auto" label="地点" prop="address">
-          <el-input v-model="temp.address" />
-        </el-form-item>
-        <el-form-item label-width="auto" label="核销开始时间" prop="allow_to_use_at">
-          <el-input v-model="temp.allow_to_use_at" />
-        </el-form-item>
-        <el-form-item label-width="auto" label="介绍" prop="description">
-          <el-input v-model="temp.description" />
-        </el-form-item>
-        <el-form-item label-width="auto" label="报名截止时间" prop="end_at">
-          <el-input v-model="temp.end_at" />
-        </el-form-item>
-        <el-form-item label-width="auto" label="优惠券失效时间" prop="expire_at">
-          <el-input v-model="temp.expire_at" />
-        </el-form-item>
-        <el-form-item label-width="auto" label="门店" prop="shop">
-          <el-input v-model="temp.shop" />
-        </el-form-item>
-        <el-form-item label-width="auto" label="报名费" prop="signing_up_fee">
-          <el-input v-model="temp.signing_up_fee" />
-        </el-form-item>
-        <el-form-item label-width="auto" label="活动举办时间" prop="end_at">
-          <el-input v-model="temp.start_at" />
-        </el-form-item>
-        <el-form-item label-width="auto" label="主办方电话" prop="tel">
-          <el-input v-model="temp.tel" />
-        </el-form-item>
-        <el-form-item label-width="auto" label="视频封面" prop="video_thumbnail">
-          <el-input v-model="temp.video_thumbnail" />
-          <el-image style="width: 200px" :src="$backend + temp.video_thumbnail" fit="fit" />
-        </el-form-item>
-
-        <!-- <el-form-item label="Role" prop="role">
-          <el-select
-            v-model="temp.role"
-            class="filter-item"
-            placeholder="Please select"
-          >
-            <el-option
-              v-for="item in roleOptions"
-              :key="item.key"
-              :label="item.display_name"
-              :value="item.key"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="权限" prop="permission">
-          <el-select
-            v-model="temp.permission"
-            class="filter-item"
-            placeholder="Please select"
-          >
-            <el-option
-              v-for="item in permissionOptions"
-              :key="item.key"
-              :label="item.display_name"
-              :value="item.key"
-            />
-          </el-select>
-        </el-form-item>-->
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">Cancel</el-button>
-        <el-button
-          type="primary"
-          @click="dialogStatus === 'create' ? createData() : updateData()"
-        >Confirm</el-button>
-      </div>
-    </el-dialog>
-
-    <!-- <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form
-        ref="dataForm"
-        :rules="rules"
-        :model="temp"
-        label-position="left"
-        label-width="70px"
-        style="width: 400px; margin-left: 50px"
-      >
-        <el-form-item label="Type" prop="type">
-          <el-select
-            v-model="temp.type"
-            class="filter-item"
-            placeholder="Please select"
-          >
-            <el-option
-              v-for="item in calendarTypeOptions"
-              :key="item.key"
-              :label="item.display_name"
-              :value="item.key"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Date" prop="timestamp">
-          <el-date-picker
-            v-model="temp.timestamp"
-            type="datetime"
-            placeholder="Please pick a date"
-          />
-        </el-form-item>
-        <el-form-item label="Title" prop="title">
-          <el-input v-model="temp.title" />
-        </el-form-item>
-        <el-form-item label="Status">
-          <el-select
-            v-model="temp.status"
-            class="filter-item"
-            placeholder="Please select"
-          >
-            <el-option
-              v-for="item in statusOptions"
-              :key="item"
-              :label="item"
-              :value="item"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Imp">
-          <el-rate
-            v-model="temp.importance"
-            :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
-            :max="3"
-            style="margin-top: 8px"
-          />
-        </el-form-item>
-        <el-form-item label="Remark">
-          <el-input
-            v-model="temp.remark"
-            :autosize="{ minRows: 2, maxRows: 4 }"
-            type="textarea"
-            placeholder="Please input"
-          />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false"> Cancel </el-button>
-        <el-button
-          type="primary"
-          @click="dialogStatus === 'create' ? createData() : updateData()"
-        >
-          Confirm
-        </el-button>
-      </div>
-    </el-dialog>-->
-
     <el-dialog :visible.sync="dialogPvVisible" title="Reading statistics">
       <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
         <el-table-column prop="key" label="Channel" />
@@ -399,6 +237,11 @@ const couponOptions = [
   { key: 'false', display_name: '否' }
 ]
 
+const orderStateOptions = [
+  { key: 'paid', display_name: 'paid' },
+  { key: 'unpaid', display_name: 'unpaid' }
+]
+
 export default {
   name: 'ComplexTable',
   components: { Pagination },
@@ -433,16 +276,18 @@ export default {
         permission: undefined,
         type: undefined,
         sort: '+id',
-        coupon: 'false'
+        coupon: 'false',
+        state: undefined
       },
       roleOptions,
+      orderStateOptions,
       activityOptions: [],
       couponOptions,
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
       sortOptions: [
-        { label: 'ID Ascending', key: '+id' },
-        { label: 'ID Descending', key: '-id' }
+        { label: 'ID 升序', key: '+id' },
+        { label: 'ID 降序', key: '-id' }
       ],
       statusOptions: ['published', 'draft', 'deleted'],
       showReviewer: false,
@@ -490,11 +335,14 @@ export default {
         this.listQuery.activity = this.$route.query.activity
         localStorage.activity = this.$route.query.activity
       } else {
+        if (!response.data[parseInt(localStorage.activity)]) {
+          localStorage.activity = response.data[0].id
+        }
         this.listQuery.activity = parseInt(localStorage.activity)
       }
-      if (this.$route.query.coupon) {
-        localStorage.coupon = this.$route.query.coupon.toString()
-      }
+      // if (this.$route.query.coupon) {
+      //   localStorage.coupon = this.$route.query.coupon.toString()
+      // }
       // console.log(localStorage.activity, localStorage.coupon)
       this.getList()
     })
@@ -513,7 +361,9 @@ export default {
       })
     },
     handleFilter() {
-      console.log(this.listQuery)
+      if (this.listQuery.activity) {
+        localStorage.activity = this.listQuery.activity
+      }
       this.listQuery.page = 1
       this.getList()
     },

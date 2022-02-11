@@ -23,14 +23,28 @@
         />
       </el-select>
       <el-select
-        v-model="listQuery.coupon"
-        placeholder="是否有券"
+        v-model="listQuery.type"
+        placeholder="类型"
         clearable
         style="width: 200px"
         class="filter-item"
       >
         <el-option
-          v-for="item in couponOptions"
+          v-for="item in couponTypeOptions"
+          :key="item.key"
+          :label="item.display_name"
+          :value="item.key"
+        />
+      </el-select>
+      <el-select
+        v-model="listQuery.state"
+        placeholder="状态"
+        clearable
+        style="width: 200px"
+        class="filter-item"
+      >
+        <el-option
+          v-for="item in couponStateOptions"
           :key="item.key"
           :label="item.display_name"
           :value="item.key"
@@ -400,6 +414,16 @@ const couponOptions = [
   { key: 'false', display_name: '否' }
 ]
 
+const couponTypeOptions = [
+  { key: 'normal', display_name: 'normal' },
+  { key: 'shared', display_name: 'shared' }
+]
+
+const couponStateOptions = [
+  { key: 'available', display_name: 'available' },
+  { key: 'used', display_name: 'used' }
+]
+
 export default {
   name: 'ComplexTable',
   components: { Pagination },
@@ -434,16 +458,19 @@ export default {
         permission: undefined,
         type: undefined,
         sort: '+id',
-        coupon: 'false'
+        coupon: undefined,
+        state: undefined
       },
       roleOptions,
+      couponStateOptions,
+      couponTypeOptions,
       activityOptions: [],
       couponOptions,
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
       sortOptions: [
-        { label: 'ID Ascending', key: '+id' },
-        { label: 'ID Descending', key: '-id' }
+        { label: 'ID 升序', key: '+id' },
+        { label: 'ID 降序', key: '-id' }
       ],
       statusOptions: ['published', 'draft', 'deleted'],
       showReviewer: false,
@@ -491,12 +518,11 @@ export default {
         this.listQuery.activity = this.$route.query.activity
         localStorage.activity = this.$route.query.activity
       } else {
+        if (!response.data[parseInt(localStorage.activity)]) {
+          localStorage.activity = response.data[0].id
+        }
         this.listQuery.activity = parseInt(localStorage.activity)
       }
-      if (this.$route.query.coupon) {
-        localStorage.coupon = this.$route.query.coupon.toString()
-      }
-      // console.log(localStorage.activity, localStorage.coupon)
       this.getList()
     })
   },
@@ -514,7 +540,9 @@ export default {
       })
     },
     handleFilter() {
-      console.log(this.listQuery)
+      if (this.listQuery.activity) {
+        localStorage.activity = this.listQuery.activity
+      }
       this.listQuery.page = 1
       this.getList()
     },

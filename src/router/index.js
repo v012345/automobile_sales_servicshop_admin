@@ -108,19 +108,7 @@ export const constantRoutes = [
       }
     }]
   },
-  {
-    path: '/setting',
-    component: Layout,
-    children: [{
-      path: '/setting',
-      name: 'setting',
-      component: () => import('@/views/setting/index'),
-      meta: {
-        title: '设置',
-        icon: 'el-icon-s-tools'
-      }
-    }]
-  },
+
   {
     path: '/orders',
     component: Layout,
@@ -184,7 +172,19 @@ export const constantRoutes = [
       }
     ]
   },
-
+  {
+    path: '/setting',
+    component: Layout,
+    children: [{
+      path: '/setting',
+      name: 'setting',
+      component: () => import('@/views/setting/index'),
+      meta: {
+        title: '设置',
+        icon: 'el-icon-s-tools'
+      }
+    }]
+  },
   // {
   //   path: '/nested',
   //   component: Layout,
