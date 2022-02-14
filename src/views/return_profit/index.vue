@@ -1,5 +1,116 @@
 <template>
   <div class="app-container">
+    <div class="filter-container">
+      <el-input
+        v-model="listQuery.id"
+        placeholder="Id"
+        style="width: 200px"
+        class="filter-item"
+        @keyup.enter.native="handleFilter"
+      />
+      <el-select
+        v-model="listQuery.activity"
+        placeholder="活动"
+        clearable
+        style="width: 200px"
+        class="filter-item"
+      >
+        <el-option
+          v-for="item in activityOptions"
+          :key="item.id"
+          :label="item.title"
+          :value="item.id"
+        />
+      </el-select>
+      <el-select
+        v-model="listQuery.state"
+        placeholder="支付状态"
+        clearable
+        style="width: 200px"
+        class="filter-item"
+      >
+        <el-option
+          v-for="item in orderStateOptions"
+          :key="item.key"
+          :label="item.display_name"
+          :value="item.key"
+        />
+      </el-select>
+      <!-- <el-select
+        v-model="listQuery.importance"
+        placeholder="Imp"
+        clearable
+        style="width: 90px"
+        class="filter-item"
+      >
+        <el-option
+          v-for="item in importanceOptions"
+          :key="item"
+          :label="item"
+          :value="item"
+        />
+      </el-select>-->
+      <!-- <el-select
+        v-model="listQuery.type"
+        placeholder="Type"
+        clearable
+        class="filter-item"
+        style="width: 130px"
+      >
+        <el-option
+          v-for="item in calendarTypeOptions"
+          :key="item.key"
+          :label="item.display_name + '(' + item.key + ')'"
+          :value="item.key"
+        />
+      </el-select>-->
+      <el-select
+        v-model="listQuery.sort"
+        style="width: 140px"
+        class="filter-item"
+        @change="handleFilter"
+      >
+        <el-option
+          v-for="item in sortOptions"
+          :key="item.key"
+          :label="item.label"
+          :value="item.key"
+        />
+      </el-select>
+      <el-button
+        v-waves
+        class="filter-item"
+        type="primary"
+        icon="el-icon-search"
+        @click="handleFilter"
+      >搜索</el-button>
+      <!-- <el-button
+        class="filter-item"
+        style="margin-left: 10px"
+        type="primary"
+        icon="el-icon-edit"
+        @click="handleCreate"
+      >
+        Add
+      </el-button>-->
+      <el-button
+        v-waves
+        :loading="downloadLoading"
+        class="filter-item"
+        type="primary"
+        icon="el-icon-download"
+        @click="handleDownload"
+      >导出</el-button>
+      <!-- <el-checkbox
+        v-model="showReviewer"
+        class="filter-item"
+        style="margin-left: 15px"
+        @change="tableKey = tableKey + 1"
+      >
+        reviewer
+      </el-checkbox>-->
+    </div>
+
     <el-table
       :key="tableKey"
       v-loading="listLoading"
@@ -10,52 +121,110 @@
       style="width: 100%"
       @sort-change="sortChange"
     >
-      <el-table-column label="技术支持" align="center">
-        <template slot-scope="{ row }">{{ row.tech_surppot }}</template>
+      <el-table-column
+        label="ID"
+        prop="id"
+        sortable="custom"
+        align="center"
+        width="80"
+        :class-name="getSortClass('id')"
+      >
+        <template slot-scope="{ row }">
+          <span>{{ row.id }}</span>
+        </template>
       </el-table-column>
-      <el-table-column label="1级返利(0~0.99)" align="center">
-        <template slot-scope="{ row }">{{ row.level1 }}</template>
+      <el-table-column label="订单号" align="center">
+        <template slot-scope="{ row }">
+          <div>{{ row.order_number }}</div>
+        </template>
       </el-table-column>
-      <el-table-column label="2级返利(0~0.99)" align="center">
-        <template slot-scope="{ row }">{{ row.level2 }}</template>
+      <el-table-column label="收款人Id" align="center">
+        <template slot-scope="{ row }">
+          <div>{{ row.payee }}</div>
+        </template>
       </el-table-column>
-      <el-table-column label="团长返利(0~0.99)" align="center">
-        <template slot-scope="{ row }">{{ row.leader }}</template>
+      <el-table-column label="活动Id" align="center">
+        <template slot-scope="{ row }">
+          <div>{{ row.activity_id }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="支付状态" align="center">
+        <template slot-scope="{ row }">
+          <div>{{ row.state }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="金额" align="center">
+        <template slot-scope="{ row }">
+          <div>{{ row.amount }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="生成时间" align="center">
+        <template slot-scope="{ row }">
+          <div>{{ row.created_at }}</div>
+        </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="{ row, $index }">
-          <el-button type="primary" size="mini" @click="handleUpdate(row, $index)">编辑</el-button>
+        <template v-if="row.state == 'unpaid'" slot-scope="{ row, $index }">
+          <el-button type="primary" size="mini" @click="handleUpdate(row, $index)">手动转账</el-button>
+          <!-- <el-button
+            v-if="row.status != 'published'"
+            size="mini"
+            type="success"
+            @click="handleModifyStatus(row, 'published')"
+          >
+            Publish
+          </el-button>
+          <el-button
+            v-if="row.status != 'draft'"
+            size="mini"
+            @click="handleModifyStatus(row, 'draft')"
+          >
+            Draft
+          </el-button>
+          <el-button
+            v-if="row.status != 'deleted'"
+            size="mini"
+            type="danger"
+            @click="handleDelete(row, $index)"
+          >
+            Delete
+          </el-button>-->
         </template>
       </el-table-column>
     </el-table>
 
+    <pagination
+      v-show="total > 0"
+      :total="total"
+      :page.sync="listQuery.page"
+      :limit.sync="listQuery.limit"
+      @pagination="getList"
+    />
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form
         ref="dataForm"
+        :rules="rules"
         :model="temp"
         label-position="left"
         label-width="70px"
         style="width: 400px; margin-left: 50px"
       >
-        <el-form-item label-width="auto" label="技术支持" prop="title">
-          <el-input v-model="temp.tech_surppot" />
+        <el-form-item label="收款人" prop="role">
+          <el-input v-model="temp.payee_info.name" readonly />
         </el-form-item>
-        <el-form-item label-width="auto" label="1级返利(0~0.99)" prop="level1">
-          <el-input v-model.trim="temp.level1" />
+        <el-form-item label="电话" prop="permission">
+          <el-input v-model="temp.payee_info.phone_number" readonly />
         </el-form-item>
-        <el-form-item label-width="auto" label="2级返利(0~0.99)" prop="level2">
-          <el-input v-model.trim="temp.level2" />
-        </el-form-item>
-        <el-form-item label-width="auto" label="团长返利(0~0.99)" prop="leader">
-          <el-input v-model.trim="temp.leader" />
+        <el-form-item label="金额" prop="permission">
+          <el-input v-model="temp.amount" readonly />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">Cancel</el-button>
+        <el-button @click="dialogFormVisible = false">取消</el-button>
         <el-button
           type="primary"
           @click="dialogStatus === 'create' ? createData() : updateData()"
-        >Confirm</el-button>
+        >支付完成</el-button>
       </div>
     </el-dialog>
     <el-dialog :visible.sync="dialogPvVisible" title="Reading statistics">
@@ -71,7 +240,7 @@
 </template>
 
 <script>
-import { fetchList, fetchPv, createArticle, updateConfig } from '@/api/setting'
+import { fetchList, fetchPv, createArticle, updateOrder, fetchActivities } from '@/api/return_profit'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
@@ -95,9 +264,14 @@ const roleOptions = [
   { key: 'leader', display_name: 'leader' }
 ]
 
-const permissionOptions = [
-  { key: 'user', display_name: 'user' },
-  { key: 'employee', display_name: 'employee' }
+const couponOptions = [
+  { key: 'true', display_name: '是' },
+  { key: 'false', display_name: '否' }
+]
+
+const orderStateOptions = [
+  { key: 'paid', display_name: 'paid' },
+  { key: 'unpaid', display_name: 'unpaid' }
 ]
 
 export default {
@@ -124,6 +298,7 @@ export default {
       total: 0,
       listLoading: true,
       listQuery: {
+        activity: undefined,
         page: 1,
         limit: 20,
         importance: undefined,
@@ -132,15 +307,19 @@ export default {
         role: undefined,
         permission: undefined,
         type: undefined,
-        sort: '+id'
+        sort: '+id',
+        coupon: 'false',
+        state: undefined
       },
       roleOptions,
-      permissionOptions,
+      orderStateOptions,
+      activityOptions: [],
+      couponOptions,
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
       sortOptions: [
-        { label: 'ID Ascending', key: '+id' },
-        { label: 'ID Descending', key: '-id' }
+        { label: 'ID 升序', key: '+id' },
+        { label: 'ID 降序', key: '-id' }
       ],
       statusOptions: ['published', 'draft', 'deleted'],
       showReviewer: false,
@@ -152,8 +331,7 @@ export default {
         title: '',
         type: '',
         status: 'published',
-        location: {},
-        offset: {}
+        payee_info: {}
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -183,7 +361,24 @@ export default {
     }
   },
   created() {
-    this.getList()
+    // console.log(this.$route.query.activity)
+    fetchActivities().then((response) => {
+      this.activityOptions = response.data
+      if (this.$route.query.activity) {
+        this.listQuery.activity = this.$route.query.activity
+        localStorage.activity = this.$route.query.activity
+      } else {
+        if (!response.data[parseInt(localStorage.activity)]) {
+          localStorage.activity = response.data[0].id
+        }
+        this.listQuery.activity = parseInt(localStorage.activity)
+      }
+      // if (this.$route.query.coupon) {
+      //   localStorage.coupon = this.$route.query.coupon.toString()
+      // }
+      // console.log(localStorage.activity, localStorage.coupon)
+      this.getList()
+    })
   },
   methods: {
     getList() {
@@ -199,6 +394,9 @@ export default {
       })
     },
     handleFilter() {
+      if (this.listQuery.activity) {
+        localStorage.activity = this.listQuery.activity
+      }
       this.listQuery.page = 1
       this.getList()
     },
@@ -262,7 +460,7 @@ export default {
     },
     handleUpdate(row, index) {
       this.temp = Object.assign({}, row) // copy obj
-      // console.log(this.temp)
+
       // this.temp.timestamp = new Date(this.temp.timestamp)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
@@ -273,6 +471,7 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
+          this.temp.state = 'paid'
           const tempData = Object.assign({}, this.temp)
           // console.log(tempData)
           // tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
@@ -287,7 +486,7 @@ export default {
           //     duration: 2000
           //   })
           // })
-          updateConfig(tempData).then(() => {
+          updateOrder(tempData).then(() => {
             const index = this.list.findIndex((v) => v.id === this.temp.id)
             this.list.splice(index, 1, this.temp)
             this.dialogFormVisible = false
@@ -323,23 +522,21 @@ export default {
         // const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
         const tHeader = [
           'id',
-          'name',
-          'permission',
-          'gender',
-          'inviter',
-          'last_login_at',
-          'phone_number',
-          'role'
+          '订单号',
+          '用户Id',
+          '活动Id',
+          '支付状态',
+          '生成时间'
+
         ]
         const filterVal = [
           'id',
-          'name',
-          'permission',
-          'gender',
-          'inviter',
-          'last_login_at',
-          'phone_number',
-          'role'
+          'order_number',
+          'payee',
+          'activity',
+          'state',
+          'created_at'
+
         ]
         const data = this.formatJson(filterVal)
         excel.export_json_to_excel({

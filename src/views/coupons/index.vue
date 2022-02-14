@@ -97,7 +97,7 @@
         type="primary"
         icon="el-icon-search"
         @click="handleFilter"
-      >Search</el-button>
+      >搜索</el-button>
       <!-- <el-button
         class="filter-item"
         style="margin-left: 10px"
@@ -114,7 +114,7 @@
         type="primary"
         icon="el-icon-download"
         @click="handleDownload"
-      >Export</el-button>
+      >导出</el-button>
       <!-- <el-checkbox
         v-model="showReviewer"
         class="filter-item"
@@ -667,29 +667,27 @@ export default {
         // const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
         const tHeader = [
           'id',
-          'name',
-          'permission',
-          'gender',
-          'inviter',
-          'last_login_at',
-          'phone_number',
-          'role'
+          '订单号',
+          '生成时间',
+          '所有者',
+          '活动',
+          '类型',
+          '状态'
         ]
         const filterVal = [
           'id',
-          'name',
-          'permission',
-          'gender',
-          'inviter',
-          'last_login_at',
-          'phone_number',
-          'role'
+          'order_number',
+          'created_at',
+          'participant.participant_info.name',
+          'activity.title',
+          'type',
+          'state'
         ]
         const data = this.formatJson(filterVal)
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: 'table-list'
+          filename: 'coupons'
         })
         this.downloadLoading = false
       })
@@ -699,6 +697,10 @@ export default {
         filterVal.map((j) => {
           if (j === 'timestamp') {
             return parseTime(v[j])
+          } else if (j === 'participant.participant_info.name') {
+            return v.participant.participant_info.name
+          } else if (j === 'activity.title') {
+            return v.activity.title
           } else {
             return v[j]
           }

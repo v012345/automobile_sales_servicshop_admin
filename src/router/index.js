@@ -122,8 +122,22 @@ export const constantRoutes = [
       }
     }]
   },
+  {
+    path: '/return_profit',
+    component: Layout,
+    children: [{
+      path: '/return_profit',
+      name: 'return_profit',
+      component: () => import('@/views/return_profit/index'),
+      meta: {
+        title: '返利',
+        icon: 'el-icon-s-check'
+      }
+    }]
+  },
 
-  // {el-icon-s-order
+  // {el-icon-s-order 
+
   //   path: '/demo',
   //   component: Layout,
   //   children: [{

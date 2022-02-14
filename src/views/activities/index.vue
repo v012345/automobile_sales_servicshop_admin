@@ -78,7 +78,7 @@
         type="primary"
         icon="el-icon-search"
         @click="handleFilter"
-      >Search</el-button>
+      >搜索</el-button>
       <!-- <el-button
         class="filter-item"
         style="margin-left: 10px"
@@ -88,14 +88,14 @@
       >
         Add
       </el-button>-->
-      <el-button
+      <!-- <el-button
         v-waves
         :loading="downloadLoading"
         class="filter-item"
         type="primary"
         icon="el-icon-download"
         @click="handleDownload"
-      >Export</el-button>
+      >Export</el-button>-->
       <!-- <el-checkbox
         v-model="showReviewer"
         class="filter-item"

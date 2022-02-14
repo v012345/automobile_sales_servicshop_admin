@@ -83,7 +83,7 @@
         type="primary"
         icon="el-icon-search"
         @click="handleFilter"
-      >Search</el-button>
+      >搜索</el-button>
       <!-- <el-button
         class="filter-item"
         style="margin-left: 10px"
@@ -100,7 +100,7 @@
         type="primary"
         icon="el-icon-download"
         @click="handleDownload"
-      >Export</el-button>
+      >导出</el-button>
       <!-- <el-checkbox
         v-model="showReviewer"
         class="filter-item"
@@ -146,6 +146,11 @@
       <el-table-column label="活动Id" align="center">
         <template slot-scope="{ row }">
           <div>{{ row.item }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="金额" align="center">
+        <template slot-scope="{ row }">
+          <div>{{ row.amount }}</div>
         </template>
       </el-table-column>
       <el-table-column label="支付状态" align="center">
@@ -488,23 +493,21 @@ export default {
         // const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
         const tHeader = [
           'id',
-          'name',
-          'permission',
-          'gender',
-          'inviter',
-          'last_login_at',
-          'phone_number',
-          'role'
+          '订单号',
+          '用户Id',
+          '活动Id',
+          '支付状态',
+          '生成时间'
+
         ]
         const filterVal = [
           'id',
-          'name',
-          'permission',
-          'gender',
-          'inviter',
-          'last_login_at',
-          'phone_number',
-          'role'
+          'order_number',
+          'payer',
+          'item',
+          'state',
+          'created_at'
+
         ]
         const data = this.formatJson(filterVal)
         excel.export_json_to_excel({

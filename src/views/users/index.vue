@@ -78,7 +78,7 @@
         type="primary"
         icon="el-icon-search"
         @click="handleFilter"
-      >Search</el-button>
+      >搜索</el-button>
       <!-- <el-button
         class="filter-item"
         style="margin-left: 10px"
@@ -95,7 +95,7 @@
         type="primary"
         icon="el-icon-download"
         @click="handleDownload"
-      >Export</el-button>
+      >导出</el-button>
       <!-- <el-checkbox
         v-model="showReviewer"
         class="filter-item"
@@ -162,6 +162,12 @@
       <el-table-column label="邀请人Id" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.inviter }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="活跃时间" width="200px" align="center">
+        <template slot-scope="{ row }">
+          <!-- <span>{{ row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span> -->
+          <span>{{ row.last_login_at }}</span>
         </template>
       </el-table-column>
       <el-table-column label="关注时间" width="200px" align="center">
@@ -631,29 +637,29 @@ export default {
         // const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
         const tHeader = [
           'id',
-          'name',
-          'permission',
-          'gender',
-          'inviter',
-          'last_login_at',
-          'phone_number',
-          'role'
+          '名字',
+          '权限',
+          '邀请人id',
+          '最后活跃时间',
+          '电话号',
+          '关注时间',
+          '角色'
         ]
         const filterVal = [
           'id',
           'name',
           'permission',
-          'gender',
           'inviter',
           'last_login_at',
           'phone_number',
+          'created_at',
           'role'
         ]
         const data = this.formatJson(filterVal)
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: 'table-list'
+          filename: 'users'
         })
         this.downloadLoading = false
       })

@@ -83,7 +83,7 @@
         type="primary"
         icon="el-icon-search"
         @click="handleFilter"
-      >Search</el-button>
+      >搜索</el-button>
       <!-- <el-button
         class="filter-item"
         style="margin-left: 10px"
@@ -100,7 +100,7 @@
         type="primary"
         icon="el-icon-download"
         @click="handleDownload"
-      >Export</el-button>
+      >导出</el-button>
       <!-- <el-checkbox
         v-model="showReviewer"
         class="filter-item"
@@ -138,7 +138,7 @@
           <div>{{ row.participant_info.name }}</div>
         </template>
       </el-table-column>
-      <el-table-column label="Avatar" align="center">
+      <el-table-column label="头像" align="center">
         <template slot-scope="{ row }">
           <el-image style="width: 40px; height: 40px" :src="row.participant_info.avatar" fit="fit" />
         </template>
@@ -650,29 +650,27 @@ export default {
         // const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
         const tHeader = [
           'id',
-          'name',
-          'permission',
-          'gender',
-          'inviter',
-          'last_login_at',
-          'phone_number',
-          'role'
+          '名字',
+          '车型',
+          '牌照',
+          '活动',
+          '电话',
+          '优惠券'
         ]
         const filterVal = [
           'id',
           'name',
-          'permission',
-          'gender',
-          'inviter',
-          'last_login_at',
+          'car_model',
+          'license_plate_number',
+          'activiy.title',
           'phone_number',
-          'role'
+          'coupons_count'
         ]
         const data = this.formatJson(filterVal)
         excel.export_json_to_excel({
           header: tHeader,
           data,
-          filename: 'table-list'
+          filename: 'participants'
         })
         this.downloadLoading = false
       })
@@ -682,6 +680,8 @@ export default {
         filterVal.map((j) => {
           if (j === 'timestamp') {
             return parseTime(v[j])
+          } else if (j === 'activiy.title') {
+            return v.activiy.title
           } else {
             return v[j]
           }
