@@ -40,6 +40,7 @@ new Vue({
   created() {
     Vue.prototype.$backend = process.env.VUE_APP_BASE_BACKEND
     Vue.prototype.$api = process.env.VUE_APP_BASE_API
+    Vue.prototype.$activityDomain = process.env.VUE_APP_BASE_ACTIVITY_DOMAIN
   },
   router,
   store,

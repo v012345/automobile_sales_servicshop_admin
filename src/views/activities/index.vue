@@ -131,11 +131,24 @@
       <el-table-column label="活动" width="200" align="center">
         <template slot-scope="{ row }">{{ row.title }}</template>
       </el-table-column>
+      <el-table-column label="链接" width="200" align="center">
+        <template slot-scope="{ row }">
+          <el-button
+            v-clipboard:copy="$activityDomain + 'activity/' + row.id"
+            v-clipboard:success="clipboardSuccess"
+            type="primary"
+            icon="el-icon-document"
+          >复制</el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="报名费" align="center">
         <template slot-scope="{ row }">{{ row.signing_up_fee }}</template>
       </el-table-column>
       <el-table-column label="介绍" width="200" align="center">
         <template slot-scope="{ row }">{{ row.description }}</template>
+      </el-table-column>
+      <el-table-column label="车牌前缀" width="200" align="center">
+        <template slot-scope="{ row }">{{ row.prefix }}</template>
       </el-table-column>
       <el-table-column label="主办方" width="200" align="center">
         <template slot-scope="{ row }">
@@ -312,6 +325,9 @@
         </el-form-item>
         <el-form-item label-width="auto" label="门店" prop="shop">
           <el-input v-model="temp.shop" />
+        </el-form-item>
+        <el-form-item label-width="auto" label="车牌前缀" prop="shop">
+          <el-input v-model="temp.prefix" />
         </el-form-item>
         <el-form-item label-width="auto" label="主办方电话" prop="tel">
           <el-input v-model="temp.tel" />
@@ -516,6 +532,7 @@ import { fetchList, fetchPv, createArticle, deleteActivity, updateActivity } fro
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import clipboard from '@/directive/clipboard/index.js'
 
 const calendarTypeOptions = [
   { key: 'CN', display_name: 'China' },
@@ -544,7 +561,7 @@ const permissionOptions = [
 export default {
   name: 'ComplexTable',
   components: { Pagination },
-  directives: { waves },
+  directives: { waves, clipboard },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -627,6 +644,13 @@ export default {
     this.getList()
   },
   methods: {
+    clipboardSuccess() {
+      this.$message({
+        message: '复制成功',
+        type: 'success',
+        duration: 1500
+      })
+    },
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then((response) => {

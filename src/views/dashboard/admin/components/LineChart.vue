@@ -29,6 +29,12 @@ export default {
     chartData: {
       type: Object,
       required: true
+    },
+    xAxisData: {
+      type: Array,
+      default: () => {
+        return ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      }
     }
   },
   data() {
@@ -64,7 +70,7 @@ export default {
     setOptions({ expectedData, actualData } = {}) {
       this.chart.setOption({
         xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: this.xAxisData,
           boundaryGap: false,
           axisTick: {
             show: false
@@ -91,7 +97,7 @@ export default {
         },
         legend: {
           // data: ['expected', 'actual']
-          data: ['actual']
+          data: []
         },
         series: [{
           name: 'expected', itemStyle: {
