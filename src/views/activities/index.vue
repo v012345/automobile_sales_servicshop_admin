@@ -150,6 +150,18 @@
       <el-table-column label="车牌前缀" width="200" align="center">
         <template slot-scope="{ row }">{{ row.prefix }}</template>
       </el-table-column>
+      <el-table-column label="分享后得券" width="200" align="center">
+        <template slot-scope="{ row }">{{ row.share_mode ? "给" : "不给" }}</template>
+      </el-table-column>
+      <el-table-column label="多级返利" width="200" align="center">
+        <template slot-scope="{ row }">
+          <div>1级返利:{{ row.return_profit_rate.level1 }}</div>
+          <div>2级返利:{{ row.return_profit_rate.level2 }}</div>
+        </template>
+      </el-table-column>
+      <el-table-column label="团长返利" width="200" align="center">
+        <template slot-scope="{ row }">{{ row.return_profit_rate.leader }}</template>
+      </el-table-column>
       <el-table-column label="主办方" width="200" align="center">
         <template slot-scope="{ row }">
           <div>{{ row.shop }}</div>
@@ -325,6 +337,19 @@
         </el-form-item>
         <el-form-item label-width="auto" label="门店" prop="shop">
           <el-input v-model="temp.shop" />
+        </el-form-item>
+        <el-form-item label-width="auto" label="1级返利" prop="shop">
+          <el-input v-model.trim="temp.return_profit_rate.level1" />
+        </el-form-item>
+        <el-form-item label-width="auto" label="2级返利" prop="shop">
+          <el-input v-model.trim="temp.return_profit_rate.level2" />
+        </el-form-item>
+        <el-form-item label-width="auto" label="团长返利" prop="shop">
+          <el-input v-model.trim="temp.return_profit_rate.leader" />
+        </el-form-item>
+        <el-form-item label-width="auto" label="分享后给券" prop="shop">
+          <!-- <el-input v-model="temp.share_mode" /> -->
+          <el-switch v-model="temp.share_mode" />
         </el-form-item>
         <el-form-item label-width="auto" label="车牌前缀" prop="shop">
           <el-input v-model="temp.prefix" />
@@ -611,7 +636,8 @@ export default {
         type: '',
         status: 'published',
         location: {},
-        offset: {}
+        offset: {},
+        return_profit_rate: {}
       },
       dialogFormVisible: false,
       dialogStatus: '',
