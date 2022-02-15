@@ -158,6 +158,11 @@
           <div>{{ row.division }}</div>
         </template>
       </el-table-column>
+      <el-table-column label="用户id" align="center">
+        <template slot-scope="{ row }">
+          <div>{{ row.user_id }}</div>
+        </template>
+      </el-table-column>
       <el-table-column label="申请时间" align="center">
         <template slot-scope="{ row }">
           <div>{{ row.updated_at }}</div>
@@ -499,6 +504,7 @@ export default {
           '门店',
           '品牌',
           '地区',
+          '用户id',
           '申请时间'
         ]
         const filterVal = [
@@ -508,6 +514,7 @@ export default {
           'shop',
           'brand',
           'division',
+          'user_id',
           'updated_at'
         ]
         const data = this.formatJson(filterVal)
