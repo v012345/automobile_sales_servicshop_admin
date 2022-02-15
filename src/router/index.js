@@ -135,6 +135,19 @@ export const constantRoutes = [
       }
     }]
   },
+  {
+    path: '/franchisees',
+    component: Layout,
+    children: [{
+      path: '/franchisees',
+      name: 'franchisees',
+      component: () => import('@/views/franchisees/index'),
+      meta: {
+        title: '申请人',
+        icon: 'el-icon-s-custom'
+      }
+    }]
+  },
 
   // {el-icon-s-order 
 
