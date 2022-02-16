@@ -213,6 +213,23 @@
       <el-table-column label="返利模式" align="center">
         <template slot-scope="{ row }">{{ row.return_mode }}</template>
       </el-table-column>
+      <el-table-column label="限制车牌" align="center" width="200">
+        <template slot-scope="{ row }">
+          <div
+            v-for="(license_plate_number, i) in row.restricted_license_plate_numbers"
+            :key="i"
+            style="margin-bottom:2px"
+          >
+            {{ license_plate_number }}
+            <el-button
+              size="mini"
+              type="danger"
+              @click="removeRestrictedLicensePlateNumber(row, i)"
+            >移出</el-button>
+          </div>
+          <el-button type="primary" size="mini" @click="addRestrictedLicensePlateNumber(row)">添加</el-button>
+        </template>
+      </el-table-column>
       <!-- <el-table-column label="海报" align="center" width="120px">
         <template slot-scope="{ row }">
           <el-image
@@ -549,6 +566,17 @@
         <el-button type="primary" @click="dialogPvVisible = false">Confirm</el-button>
       </span>
     </el-dialog>
+    <el-dialog title="添加车牌" :visible.sync="addRestrictedLicensePlateNumberDialogFormVisible">
+      <el-form :model="form">
+        <el-form-item label="车牌">
+          <el-input v-model.trim="form.licensePlateNumber" autocomplete="off" />
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addRestrictedLicensePlateNumberDialogFormVisible = false">Cancel</el-button>
+        <el-button type="primary" @click="updateRestrictedLicensePlateNumbersData">Confirm</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -663,7 +691,12 @@ export default {
           { required: true, message: 'title is required', trigger: 'blur' }
         ]
       },
-      downloadLoading: false
+      downloadLoading: false,
+      addRestrictedLicensePlateNumberDialogFormVisible: false,
+      form: {
+        id: undefined,
+        licensePlateNumber: ''
+      }
     }
   },
   created() {
@@ -761,6 +794,59 @@ export default {
         this.$refs['dataForm'].clearValidate()
       })
     },
+    addRestrictedLicensePlateNumber(row, index) {
+      this.temp = Object.assign({}, row) // copy obj
+      // console.log(this.temp)
+      // this.temp.timestamp = new Date(this.temp.timestamp)
+      this.dialogStatus = 'update'
+      this.addRestrictedLicensePlateNumberDialogFormVisible = true
+      this.$nextTick(() => {
+        // this.$refs['dataForm'].clearValidate()
+      })
+    },
+    updateRestrictedLicensePlateNumbersData() {
+      if (this.form.licensePlateNumber) {
+        // console.log(this.temp)
+        this.temp.restricted_license_plate_numbers.push(this.form.licensePlateNumber)
+        const tempData = Object.assign({}, this.temp)
+        this.form.licensePlateNumber = ''
+        //
+        updateActivity(tempData).then(() => {
+          const index = this.list.findIndex((v) => v.id === this.temp.id)
+          this.list.splice(index, 1, this.temp)
+          this.addRestrictedLicensePlateNumberDialogFormVisible = false
+          this.$notify({
+            title: 'Success',
+            message: 'Update Successfully',
+            type: 'success',
+            duration: 2000
+          })
+        })
+      }
+    },
+    removeRestrictedLicensePlateNumber(row, index) {
+      this.temp = Object.assign({}, row) // copy obj
+      this.temp.restricted_license_plate_numbers.splice(index, 1)
+      const tempData = Object.assign({}, this.temp)
+
+      // this.temp.timestamp = new Date(this.temp.timestamp)
+      this.dialogStatus = 'update'
+      updateActivity(tempData).then(() => {
+        const index = this.list.findIndex((v) => v.id === this.temp.id)
+        this.list.splice(index, 1, this.temp)
+        this.addRestrictedLicensePlateNumberDialogFormVisible = false
+        this.$notify({
+          title: 'Success',
+          message: 'Update Successfully',
+          type: 'success',
+          duration: 2000
+        })
+      })
+      // this.addRestrictedLicensePlateNumberDialogFormVisible = true
+      this.$nextTick(() => {
+        // this.$refs['dataForm'].clearValidate()
+      })
+    },
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
@@ -809,6 +895,7 @@ export default {
         this.dialogPvVisible = true
       })
     },
+
     handleDownload() {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then((excel) => {

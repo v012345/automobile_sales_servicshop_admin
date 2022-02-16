@@ -158,6 +158,11 @@
           <div>{{ row.license_plate_number }}</div>
         </template>
       </el-table-column>
+      <el-table-column label="浏览时长" align="center">
+        <template slot-scope="{ row }">
+          <div>{{ row.view_duration }}</div>
+        </template>
+      </el-table-column>
       <el-table-column label="参与活动" align="center">
         <template slot-scope="{ row }">
           <div>{{ row.activiy.title }}</div>
