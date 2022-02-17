@@ -138,6 +138,11 @@
           <div>{{ row.name }}</div>
         </template>
       </el-table-column>
+      <el-table-column label="电话" align="center">
+        <template slot-scope="{ row }">
+          <div>{{ row.phone_number }}</div>
+        </template>
+      </el-table-column>
       <el-table-column label="职位" align="center">
         <template slot-scope="{ row }">
           <div>{{ row.job_title }}</div>
@@ -505,7 +510,8 @@ export default {
           '品牌',
           '地区',
           '用户id',
-          '申请时间'
+          '申请时间',
+          '手机'
         ]
         const filterVal = [
           'id',
@@ -515,7 +521,8 @@ export default {
           'brand',
           'division',
           'user_id',
-          'updated_at'
+          'updated_at',
+          'phone_number'
         ]
         const data = this.formatJson(filterVal)
         excel.export_json_to_excel({
