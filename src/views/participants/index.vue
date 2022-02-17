@@ -101,6 +101,14 @@
         icon="el-icon-download"
         @click="handleDownload"
       >导出</el-button>
+      <el-button
+        v-waves
+        :loading="downloadLoading"
+        class="filter-item"
+        type="primary"
+        icon="el-icon-download"
+        @click="handleDownloadAll"
+      >导出全部</el-button>
       <!-- <el-checkbox
         v-model="showReviewer"
         class="filter-item"
@@ -165,7 +173,7 @@
       </el-table-column>
       <el-table-column label="参与活动" align="center">
         <template slot-scope="{ row }">
-          <div>{{ row.activiy.title }}</div>
+          <div>{{ row.activity.title }}</div>
         </template>
       </el-table-column>
       <el-table-column label="优惠券" align="center">
@@ -383,6 +391,7 @@
 import { fetchList, fetchPv, createArticle, updateUser, fetchActivities } from '@/api/participants'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
+import axios from 'axios'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 const calendarTypeOptions = [
@@ -667,7 +676,7 @@ export default {
           'name',
           'car_model',
           'license_plate_number',
-          'activiy.title',
+          'activity.title',
           'phone_number',
           'coupons_count'
         ]
@@ -680,13 +689,32 @@ export default {
         this.downloadLoading = false
       })
     },
+    handleDownloadAll() {
+      if (this.listQuery.activity) {
+        this.downloadLoading = true
+        console.log()
+        axios({
+          url: this.$api + `/vue-admin-template/participants/activity/${this.listQuery.activity}/export`, // your url
+          method: 'GET',
+          responseType: 'blob' // important
+        }).then((response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data]))
+          const link = document.createElement('a')
+          link.href = url
+          link.setAttribute('download', 'file.xlsx') // or any other extension
+          document.body.appendChild(link)
+          link.click()
+          this.downloadLoading = false
+        })
+      }
+    },
     formatJson(filterVal) {
       return this.list.map((v) =>
         filterVal.map((j) => {
           if (j === 'timestamp') {
             return parseTime(v[j])
-          } else if (j === 'activiy.title') {
-            return v.activiy.title
+          } else if (j === 'activity.title') {
+            return v.activity.title
           } else {
             return v[j]
           }
