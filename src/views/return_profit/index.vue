@@ -143,6 +143,11 @@
           <div>{{ row.payee }}</div>
         </template>
       </el-table-column>
+      <el-table-column label="收款人名字" align="center">
+        <template slot-scope="{ row }">
+          <div>{{ row.payee_info.name }}</div>
+        </template>
+      </el-table-column>
       <el-table-column label="活动Id" align="center">
         <template slot-scope="{ row }">
           <div>{{ row.activity_id }}</div>

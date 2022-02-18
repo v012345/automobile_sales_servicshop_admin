@@ -13,7 +13,7 @@
       <el-table-column label="技术支持" align="center">
         <template slot-scope="{ row }">{{ row.tech_surppot }}</template>
       </el-table-column>
-      <el-table-column label="1级返利(0~0.99)" align="center">
+      <!-- <el-table-column label="1级返利(0~0.99)" align="center">
         <template slot-scope="{ row }">{{ row.level1 }}</template>
       </el-table-column>
       <el-table-column label="2级返利(0~0.99)" align="center">
@@ -21,7 +21,7 @@
       </el-table-column>
       <el-table-column label="团长返利(0~0.99)" align="center">
         <template slot-scope="{ row }">{{ row.leader }}</template>
-      </el-table-column>
+      </el-table-column>-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="{ row, $index }">
           <el-button type="primary" size="mini" @click="handleUpdate(row, $index)">编辑</el-button>
@@ -40,7 +40,7 @@
         <el-form-item label-width="auto" label="技术支持" prop="title">
           <el-input v-model="temp.tech_surppot" />
         </el-form-item>
-        <el-form-item label-width="auto" label="1级返利(0~0.99)" prop="level1">
+        <!-- <el-form-item label-width="auto" label="1级返利(0~0.99)" prop="level1">
           <el-input v-model.trim="temp.level1" />
         </el-form-item>
         <el-form-item label-width="auto" label="2级返利(0~0.99)" prop="level2">
@@ -48,7 +48,7 @@
         </el-form-item>
         <el-form-item label-width="auto" label="团长返利(0~0.99)" prop="leader">
           <el-input v-model.trim="temp.leader" />
-        </el-form-item>
+        </el-form-item>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">Cancel</el-button>
