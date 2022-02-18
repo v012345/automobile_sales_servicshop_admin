@@ -148,9 +148,21 @@ export const constantRoutes = [
       }
     }]
   },
+  {
+    path: '/attract_franchisees',
+    component: Layout,
+    children: [{
+      path: '/attract_franchisees',
+      name: 'attract_franchisees',
+      component: () => import('@/views/attract_franchisees/index'),
+      meta: {
+        title: '活动申请页',
+        icon: 'el-icon-tickets'
+      }
+    }]
+  },
 
-  // {el-icon-s-order 
-
+  // {
   //   path: '/demo',
   //   component: Layout,
   //   children: [{
