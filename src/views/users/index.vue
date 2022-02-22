@@ -8,6 +8,12 @@
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
+      <el-input
+        v-model="listQuery.name"
+        placeholder="用户名"
+        style="width: 200px"
+        class="filter-item"
+      />
       <el-select
         v-model="listQuery.role"
         placeholder="角色"
@@ -448,7 +454,8 @@ export default {
         role: undefined,
         permission: undefined,
         type: undefined,
-        sort: '+id'
+        sort: '+id',
+        name: undefined
       },
       roleOptions,
       permissionOptions,
