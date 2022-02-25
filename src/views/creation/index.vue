@@ -103,21 +103,21 @@
     <Upload
       v-show="imagecropperShow"
       :url="$api + '/poster/upload'"
-      field="poster"
+      field="file"
       @close="close"
       @crop-upload-success="posterUploadSuccess"
     />
     <Upload
       v-show="uploadThumbnailShow"
       :url="$api + '/thumbnail/upload'"
-      field="thumbnail"
+      field="file"
       @close="close"
       @crop-upload-success="thumbnailUploadSuccess"
     />
     <Upload
       v-show="uploadVideoShow"
       :url="$api + '/video/upload'"
-      field="video"
+      field="file"
       img-format="mp4"
       @close="close"
       @crop-upload-success="videoUploadSuccess"
@@ -126,7 +126,7 @@
       v-show="uploadImagesShow"
       :key="Object.keys(form.propaganda_images).length"
       :url="$api + '/images/upload'"
-      field="images"
+      field="file"
       @close="close"
       @crop-upload-success="imagesUploadSuccess"
     />
