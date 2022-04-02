@@ -259,7 +259,7 @@
         </el-form-item>
         <el-form-item label-width="auto" label="视频封面" prop="video_thumbnail">
           <el-input v-model="temp.video_thumbnail" />
-          <el-image style="width: 200px" :src="$backend + temp.video_thumbnail" fit="fit" />
+          <el-image style="width: 200px" :src="$oss + temp.video_thumbnail" fit="fit" />
         </el-form-item>
 
         <!-- <el-form-item label="Role" prop="role">

@@ -14,7 +14,7 @@
         <el-button type="primary" icon="el-icon-upload" @click="imagecropperShow = true">上传海报</el-button>
         <br />
         <template v-if="form.poster">
-          <el-image style="height: 120px" :src="$backend + form.poster" fit="fit" />
+          <el-image style="height: 120px" :src="$oss + form.poster" fit="fit" />
         </template>
       </el-form-item>
       <el-form-item label="视频">
@@ -30,9 +30,9 @@
             x5-playsinline
             playsinline
             webkit-playsinline="true"
-            :poster="$backend + form.video_thumbnail"
+            :poster="$oss + form.video_thumbnail"
           >
-            <source :src="$backend + form.video" type="video/mp4" />
+            <source :src="$oss + form.video" type="video/mp4" />
           </video>
         </template>
       </el-form-item>
@@ -42,7 +42,7 @@
         <el-image
           v-for="(image, i) in form.propaganda_images"
           :key="i"
-          :src="$backend + image"
+          :src="$oss + image"
           style="width: 60px;"
           fit="fit"
         />
