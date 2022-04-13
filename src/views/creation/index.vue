@@ -22,16 +22,8 @@
         <el-button type="primary" icon="el-icon-upload" @click="uploadThumbnailShow = true">上传封面</el-button>
         <br />
         <template v-if="form.video">
-          <video
-            preload="auto"
-            width="380px"
-            controls="controls"
-            x5-video-player-fullscreen="false"
-            x5-playsinline
-            playsinline
-            webkit-playsinline="true"
-            :poster="$oss + form.video_thumbnail"
-          >
+          <video preload="auto" width="380px" controls="controls" x5-video-player-fullscreen="false" x5-playsinline
+            playsinline webkit-playsinline="true" :poster="$oss + form.video_thumbnail">
             <source :src="$oss + form.video" type="video/mp4" />
           </video>
         </template>
@@ -39,13 +31,8 @@
       <el-form-item label="宣传图">
         <el-button type="primary" icon="el-icon-upload" @click="uploadImagesShow = true">上传宣传图</el-button>
         <br />
-        <el-image
-          v-for="(image, i) in form.propaganda_images"
-          :key="i"
-          :src="$oss + image"
-          style="width: 60px;"
-          fit="fit"
-        />
+        <el-image v-for="(image, i) in form.propaganda_images" :key="i" :src="$oss + image" style="width: 60px;"
+          fit="fit" />
       </el-form-item>
       <el-form-item label="经纬度" required>
         <el-input v-model.trim="form.location.longitude" placeholder="经度" />
@@ -58,32 +45,16 @@
         <el-input v-model="form.description" type="textarea" />
       </el-form-item>
       <el-form-item label="报名时间">
-        <el-date-picker
-          v-model="form.start_signing_up_at"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          type="datetime"
-          placeholder="Select date and time"
-        />
+        <el-date-picker v-model="form.start_signing_up_at" value-format="yyyy-MM-dd HH:mm:ss" type="datetime"
+          placeholder="Select date and time" />
       </el-form-item>
       <el-form-item label="活动时间">
-        <el-date-picker
-          v-model="form.activityDuration"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          type="datetimerange"
-          range-separator="To"
-          start-placeholder="Start date"
-          end-placeholder="End date"
-        />
+        <el-date-picker v-model="form.activityDuration" value-format="yyyy-MM-dd HH:mm:ss" type="datetimerange"
+          range-separator="To" start-placeholder="Start date" end-placeholder="End date" />
       </el-form-item>
       <el-form-item label="优惠券时效">
-        <el-date-picker
-          v-model="form.couponDuration"
-          value-format="yyyy-MM-dd HH:mm:ss"
-          type="datetimerange"
-          range-separator="To"
-          start-placeholder="Start date"
-          end-placeholder="End date"
-        />
+        <el-date-picker v-model="form.couponDuration" value-format="yyyy-MM-dd HH:mm:ss" type="datetimerange"
+          range-separator="To" start-placeholder="Start date" end-placeholder="End date" />
       </el-form-item>
       <el-form-item label="报名费">
         <el-input v-model.trim="form.signing_up_fee" />
@@ -100,37 +71,14 @@
         <el-button @click="onCancel">取消</el-button>
       </el-form-item>
     </el-form>
-    <Upload
-      v-show="imagecropperShow"
-      :url="$api + '/poster/upload'"
-      field="file"
-      @close="close"
-      @crop-upload-success="posterUploadSuccess"
-    />
-    <Upload
-      v-show="uploadThumbnailShow"
-      :url="$api + '/thumbnail/upload'"
-      field="file"
-      @close="close"
-      @crop-upload-success="thumbnailUploadSuccess"
-    />
-    <Upload
-      v-show="uploadVideoShow"
-      :url="$api + '/video/upload'"
-      field="file"
-      img-format="mp4"
-      @close="close"
-      @crop-upload-success="videoUploadSuccess"
-    />
-    <Upload
-      v-show="uploadImagesShow"
-      :key="Object.keys(form.propaganda_images).length"
-      :url="$api + '/images/upload'"
-      field="file"
-      @close="close"
-      @crop-upload-success="imagesUploadSuccess"
-    />
-  </div>
+    <Upload v-show="imagecropperShow" :url="$api + '/store'" field="file" @close="close"
+      @crop-upload-success="posterUploadSuccess" />
+    <Upload v-show="uploadThumbnailShow" :url="$api + '/store'" field="file" @close="close"
+      @crop-upload-success="thumbnailUploadSuccess" />
+    <Upload v-show="uploadVideoShow" :url="$api + '/store'" field="file" img-format="mp4" @close="close"
+      @crop-upload-success="videoUploadSuccess" />
+    <Upload v-show="uploadImagesShow" :key="Object.keys(form.propaganda_images).length" :url="$api + '/store'"
+      field="file" @close="close" @crop-upload-success="imagesUploadSuccess" />  </div>
 </template>
 
 <script>

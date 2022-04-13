@@ -1,41 +1,14 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input
-        v-model="listQuery.id"
-        placeholder="用户Id"
-        style="width: 200px"
-        class="filter-item"
-        @keyup.enter.native="handleFilter"
-      />
-      <el-input
-        v-model="listQuery.name"
-        placeholder="用户名"
-        style="width: 200px"
-        class="filter-item"
-      />
-      <el-select
-        v-model="listQuery.role"
-        placeholder="角色"
-        clearable
-        style="width: 90px"
-        class="filter-item"
-      >
+      <el-input v-model="listQuery.id" placeholder="用户Id" style="width: 200px" class="filter-item"
+        @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.name" placeholder="用户名" style="width: 200px" class="filter-item" />
+      <el-select v-model="listQuery.role" placeholder="角色" clearable style="width: 90px" class="filter-item">
         <el-option v-for="item in roleOptions" :key="item.key" :label="item.key" :value="item.key" />
       </el-select>
-      <el-select
-        v-model="listQuery.permission"
-        placeholder="权限"
-        clearable
-        style="width: 90px"
-        class="filter-item"
-      >
-        <el-option
-          v-for="item in permissionOptions"
-          :key="item.key"
-          :label="item.key"
-          :value="item.key"
-        />
+      <el-select v-model="listQuery.permission" placeholder="权限" clearable style="width: 90px" class="filter-item">
+        <el-option v-for="item in permissionOptions" :key="item.key" :label="item.key" :value="item.key" />
       </el-select>
       <!-- <el-select
         v-model="listQuery.importance"
@@ -65,26 +38,10 @@
           :value="item.key"
         />
       </el-select>-->
-      <el-select
-        v-model="listQuery.sort"
-        style="width: 140px"
-        class="filter-item"
-        @change="handleFilter"
-      >
-        <el-option
-          v-for="item in sortOptions"
-          :key="item.key"
-          :label="item.label"
-          :value="item.key"
-        />
+      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
+        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
       </el-select>
-      <el-button
-        v-waves
-        class="filter-item"
-        type="primary"
-        icon="el-icon-search"
-        @click="handleFilter"
-      >搜索</el-button>
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
       <!-- <el-button
         class="filter-item"
         style="margin-left: 10px"
@@ -94,14 +51,8 @@
       >
         Add
       </el-button>-->
-      <el-button
-        v-waves
-        :loading="downloadLoading"
-        class="filter-item"
-        type="primary"
-        icon="el-icon-download"
-        @click="handleDownload"
-      >导出</el-button>
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download"
+        @click="handleDownload">导出</el-button>
       <!-- <el-checkbox
         v-model="showReviewer"
         class="filter-item"
@@ -112,24 +63,10 @@
       </el-checkbox>-->
     </div>
 
-    <el-table
-      :key="tableKey"
-      v-loading="listLoading"
-      :data="list"
-      border
-      fit
-      highlight-current-row
-      style="width: 100%"
-      @sort-change="sortChange"
-    >
-      <el-table-column
-        label="ID"
-        prop="id"
-        sortable="custom"
-        align="center"
-        width="80"
-        :class-name="getSortClass('id')"
-      >
+    <el-table :key="tableKey" v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%"
+      @sort-change="sortChange">
+      <el-table-column label="ID" prop="id" sortable="custom" align="center" width="80"
+        :class-name="getSortClass('id')">
         <template slot-scope="{ row }">
           <span>{{ row.id }}</span>
         </template>
@@ -249,49 +186,25 @@
       </el-table-column>
     </el-table>
 
-    <pagination
-      v-show="total > 0"
-      :total="total"
-      :page.sync="listQuery.page"
-      :limit.sync="listQuery.limit"
-      @pagination="getList"
-    />
+    <pagination v-show="total > 0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"
+      @pagination="getList" />
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form
-        ref="dataForm"
-        :rules="rules"
-        :model="temp"
-        label-position="left"
-        label-width="70px"
-        style="width: 400px; margin-left: 50px"
-      >
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px"
+        style="width: 400px; margin-left: 50px">
         <el-form-item label="角色" prop="role">
           <el-select v-model="temp.role" class="filter-item" placeholder="Please select">
-            <el-option
-              v-for="item in roleOptions"
-              :key="item.key"
-              :label="item.display_name"
-              :value="item.key"
-            />
+            <el-option v-for="item in roleOptions" :key="item.key" :label="item.display_name" :value="item.key" />
           </el-select>
         </el-form-item>
         <el-form-item label="权限" prop="permission">
           <el-select v-model="temp.permission" class="filter-item" placeholder="Please select">
-            <el-option
-              v-for="item in permissionOptions"
-              :key="item.key"
-              :label="item.display_name"
-              :value="item.key"
-            />
+            <el-option v-for="item in permissionOptions" :key="item.key" :label="item.display_name" :value="item.key" />
           </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">Cancel</el-button>
-        <el-button
-          type="primary"
-          @click="dialogStatus === 'create' ? createData() : updateData()"
-        >Confirm</el-button>
+        <el-button type="primary" @click="dialogStatus === 'create' ? createData() : updateData()">Confirm</el-button>
       </div>
     </el-dialog>
 
@@ -378,8 +291,7 @@
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogPvVisible = false">Confirm</el-button>
       </span>
-    </el-dialog>
-  </div>
+    </el-dialog>  </div>
 </template>
 
 <script>

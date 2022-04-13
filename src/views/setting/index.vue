@@ -1,27 +1,33 @@
 <template>
   <div class="app-container">
-    <el-table
-      :key="tableKey"
-      v-loading="listLoading"
-      :data="list"
-      border
-      fit
-      highlight-current-row
-      style="width: 100%"
-      @sort-change="sortChange"
-    >
+    <el-table :key="tableKey" v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%"
+      @sort-change="sortChange">
       <el-table-column label="技术支持" align="center">
         <template slot-scope="{ row }">{{ row.tech_surppot }}</template>
       </el-table-column>
-      <!-- <el-table-column label="1级返利(0~0.99)" align="center">
-        <template slot-scope="{ row }">{{ row.level1 }}</template>
+      <el-table-column label="自定义" align="center">
+        <template slot-scope="{ row }">
+          <div v-for="c, i in row.custom" :key="i">
+            {{ c.department }} : {{ c.title }}
+          </div>
+
+        </template>
       </el-table-column>
-      <el-table-column label="2级返利(0~0.99)" align="center">
-        <template slot-scope="{ row }">{{ row.level2 }}</template>
+      <el-table-column label="修改自定义数据" align="center">
+        <template slot-scope="{ row }">
+          <div style="margin-bottom:5px">
+            <el-upload action="" :on-change="(file, fileList) => { return fileChange(file, fileList, row.id) }"
+              :limit="1" :on-exceed="fileExceed" :file-list="fileList" :auto-upload="false" :show-file-list="false">
+              <el-button size="mini" type="primary">上传</el-button>
+            </el-upload>
+          </div>
+          <div style="margin-bottom:5px">
+            <el-button type="danger" size="mini" @click="download(row)">下载</el-button>
+          </div>
+
+        </template>
       </el-table-column>
-      <el-table-column label="团长返利(0~0.99)" align="center">
-        <template slot-scope="{ row }">{{ row.leader }}</template>
-      </el-table-column>-->
+
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="{ row, $index }">
           <el-button type="primary" size="mini" @click="handleUpdate(row, $index)">编辑</el-button>
@@ -30,32 +36,16 @@
     </el-table>
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form
-        ref="dataForm"
-        :model="temp"
-        label-position="left"
-        label-width="70px"
-        style="width: 400px; margin-left: 50px"
-      >
-        <el-form-item label-width="auto" label="技术支持" prop="title">
+      <el-form ref="dataForm" :model="temp" label-position="left" label-width="70px"
+        style="width: 400px; margin-left: 50px">
+        <el-form-item label-width="120px" label="技术支持" prop="title">
           <el-input v-model="temp.tech_surppot" />
         </el-form-item>
-        <!-- <el-form-item label-width="auto" label="1级返利(0~0.99)" prop="level1">
-          <el-input v-model.trim="temp.level1" />
-        </el-form-item>
-        <el-form-item label-width="auto" label="2级返利(0~0.99)" prop="level2">
-          <el-input v-model.trim="temp.level2" />
-        </el-form-item>
-        <el-form-item label-width="auto" label="团长返利(0~0.99)" prop="leader">
-          <el-input v-model.trim="temp.leader" />
-        </el-form-item>-->
+
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">Cancel</el-button>
-        <el-button
-          type="primary"
-          @click="dialogStatus === 'create' ? createData() : updateData()"
-        >Confirm</el-button>
+        <el-button type="primary" @click="dialogStatus === 'create' ? createData() : updateData()">Confirm</el-button>
       </div>
     </el-dialog>
     <el-dialog :visible.sync="dialogPvVisible" title="Reading statistics">
@@ -75,6 +65,8 @@ import { fetchList, fetchPv, createArticle, updateConfig } from '@/api/setting'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+import request from '@/utils/request'
+import axios from 'axios'
 
 const calendarTypeOptions = [
   { key: 'CN', display_name: 'China' },
@@ -119,6 +111,7 @@ export default {
   },
   data() {
     return {
+      fileList: [],
       tableKey: 0,
       list: null,
       total: 0,
@@ -186,6 +179,53 @@ export default {
     this.getList()
   },
   methods: {
+    fileExceed() { },
+    fileChange(file, fileList, id) {
+      this.fileList = fileList.slice(-3)
+      this.uploadFile(file, fileList, id)
+    },
+    // 自定义上传
+    uploadFile(item, b, activity_id) {
+      console.log(item, b, activity_id)
+      const form = new FormData()
+      if (item.raw) {
+        form.append('file', item.raw)
+        request({
+          url: this.$api + `/vue-admin-template/global_config/import`,
+          // url: this.$api + `/store`,
+          method: 'POST',
+          data: form
+        }).then(res => {
+          console.log(res)
+          this.$message({
+            message: '上传成功',
+            type: 'success'
+          })
+          this.fileList = []
+        }).catch(err => {
+          console.log(err)
+          this.fileList = []
+        })
+      }
+    },
+    download(row) {
+      if (row.id) {
+        this.downloadLoading = true
+        axios({
+          url: this.$api + `/vue-admin-template/global_config/export`, // your url
+          method: 'GET',
+          responseType: 'blob' // important
+        }).then((response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data]))
+          const link = document.createElement('a')
+          link.href = url
+          link.setAttribute('download', 'brand category.xlsx') // or any other extension
+          document.body.appendChild(link)
+          link.click()
+          this.downloadLoading = false
+        })
+      }
+    },
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then((response) => {

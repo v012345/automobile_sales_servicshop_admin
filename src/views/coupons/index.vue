@@ -1,54 +1,16 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input
-        v-model="listQuery.id"
-        placeholder="Id"
-        style="width: 200px"
-        class="filter-item"
-        @keyup.enter.native="handleFilter"
-      />
-      <el-select
-        v-model="listQuery.activity"
-        placeholder="活动"
-        clearable
-        style="width: 200px"
-        class="filter-item"
-      >
-        <el-option
-          v-for="item in activityOptions"
-          :key="item.id"
-          :label="item.title"
-          :value="item.id"
-        />
+      <el-input v-model="listQuery.id" placeholder="Id" style="width: 200px" class="filter-item"
+        @keyup.enter.native="handleFilter" />
+      <el-select v-model="listQuery.activity" placeholder="活动" clearable style="width: 200px" class="filter-item">
+        <el-option v-for="item in activityOptions" :key="item.id" :label="item.title" :value="item.id" />
       </el-select>
-      <el-select
-        v-model="listQuery.type"
-        placeholder="类型"
-        clearable
-        style="width: 200px"
-        class="filter-item"
-      >
-        <el-option
-          v-for="item in couponTypeOptions"
-          :key="item.key"
-          :label="item.display_name"
-          :value="item.key"
-        />
+      <el-select v-model="listQuery.type" placeholder="类型" clearable style="width: 200px" class="filter-item">
+        <el-option v-for="item in couponTypeOptions" :key="item.key" :label="item.display_name" :value="item.key" />
       </el-select>
-      <el-select
-        v-model="listQuery.state"
-        placeholder="状态"
-        clearable
-        style="width: 200px"
-        class="filter-item"
-      >
-        <el-option
-          v-for="item in couponStateOptions"
-          :key="item.key"
-          :label="item.display_name"
-          :value="item.key"
-        />
+      <el-select v-model="listQuery.state" placeholder="状态" clearable style="width: 200px" class="filter-item">
+        <el-option v-for="item in couponStateOptions" :key="item.key" :label="item.display_name" :value="item.key" />
       </el-select>
       <!-- <el-select
         v-model="listQuery.importance"
@@ -78,26 +40,10 @@
           :value="item.key"
         />
       </el-select>-->
-      <el-select
-        v-model="listQuery.sort"
-        style="width: 140px"
-        class="filter-item"
-        @change="handleFilter"
-      >
-        <el-option
-          v-for="item in sortOptions"
-          :key="item.key"
-          :label="item.label"
-          :value="item.key"
-        />
+      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
+        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
       </el-select>
-      <el-button
-        v-waves
-        class="filter-item"
-        type="primary"
-        icon="el-icon-search"
-        @click="handleFilter"
-      >搜索</el-button>
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
       <!-- <el-button
         class="filter-item"
         style="margin-left: 10px"
@@ -107,14 +53,8 @@
       >
         Add
       </el-button>-->
-      <el-button
-        v-waves
-        :loading="downloadLoading"
-        class="filter-item"
-        type="primary"
-        icon="el-icon-download"
-        @click="handleDownload"
-      >导出</el-button>
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download"
+        @click="handleDownload">导出</el-button>
       <!-- <el-checkbox
         v-model="showReviewer"
         class="filter-item"
@@ -125,24 +65,10 @@
       </el-checkbox>-->
     </div>
 
-    <el-table
-      :key="tableKey"
-      v-loading="listLoading"
-      :data="list"
-      border
-      fit
-      highlight-current-row
-      style="width: 100%"
-      @sort-change="sortChange"
-    >
-      <el-table-column
-        label="ID"
-        prop="id"
-        sortable="custom"
-        align="center"
-        width="80"
-        :class-name="getSortClass('id')"
-      >
+    <el-table :key="tableKey" v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%"
+      @sort-change="sortChange">
+      <el-table-column label="ID" prop="id" sortable="custom" align="center" width="80"
+        :class-name="getSortClass('id')">
         <template slot-scope="{ row }">
           <span>{{ row.id }}</span>
         </template>
@@ -208,53 +134,42 @@
       </el-table-column>-->
     </el-table>
 
-    <pagination
-      v-show="total > 0"
-      :total="total"
-      :page.sync="listQuery.page"
-      :limit.sync="listQuery.limit"
-      @pagination="getList"
-    />
+    <pagination v-show="total > 0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"
+      @pagination="getList" />
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form
-        ref="dataForm"
-        :rules="rules"
-        :model="temp"
-        label-position="left"
-        label-width="70px"
-        style="width: 400px; margin-left: 50px"
-      >
-        <el-form-item label-width="auto" label="标题" prop="title">
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px"
+        style="width: 400px; margin-left: 50px">
+        <el-form-item label-width="120px" label="标题" prop="title">
           <el-input v-model="temp.title" />
         </el-form-item>
-        <el-form-item label-width="auto" label="地点" prop="address">
+        <el-form-item label-width="120px" label="地点" prop="address">
           <el-input v-model="temp.address" />
         </el-form-item>
-        <el-form-item label-width="auto" label="核销开始时间" prop="allow_to_use_at">
+        <el-form-item label-width="120px" label="核销开始时间" prop="allow_to_use_at">
           <el-input v-model="temp.allow_to_use_at" />
         </el-form-item>
-        <el-form-item label-width="auto" label="介绍" prop="description">
+        <el-form-item label-width="120px" label="介绍" prop="description">
           <el-input v-model="temp.description" />
         </el-form-item>
-        <el-form-item label-width="auto" label="报名截止时间" prop="end_at">
+        <el-form-item label-width="120px" label="报名截止时间" prop="end_at">
           <el-input v-model="temp.end_at" />
         </el-form-item>
-        <el-form-item label-width="auto" label="优惠券失效时间" prop="expire_at">
+        <el-form-item label-width="120px" label="优惠券失效时间" prop="expire_at">
           <el-input v-model="temp.expire_at" />
         </el-form-item>
-        <el-form-item label-width="auto" label="门店" prop="shop">
+        <el-form-item label-width="120px" label="门店" prop="shop">
           <el-input v-model="temp.shop" />
         </el-form-item>
-        <el-form-item label-width="auto" label="报名费" prop="signing_up_fee">
+        <el-form-item label-width="120px" label="报名费" prop="signing_up_fee">
           <el-input v-model="temp.signing_up_fee" />
         </el-form-item>
-        <el-form-item label-width="auto" label="活动举办时间" prop="end_at">
+        <el-form-item label-width="120px" label="活动举办时间" prop="end_at">
           <el-input v-model="temp.start_at" />
         </el-form-item>
-        <el-form-item label-width="auto" label="主办方电话" prop="tel">
+        <el-form-item label-width="120px" label="主办方电话" prop="tel">
           <el-input v-model="temp.tel" />
         </el-form-item>
-        <el-form-item label-width="auto" label="视频封面" prop="video_thumbnail">
+        <el-form-item label-width="120px" label="视频封面" prop="video_thumbnail">
           <el-input v-model="temp.video_thumbnail" />
           <el-image style="width: 200px" :src="$oss + temp.video_thumbnail" fit="fit" />
         </el-form-item>
@@ -290,10 +205,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">Cancel</el-button>
-        <el-button
-          type="primary"
-          @click="dialogStatus === 'create' ? createData() : updateData()"
-        >Confirm</el-button>
+        <el-button type="primary" @click="dialogStatus === 'create' ? createData() : updateData()">Confirm</el-button>
       </div>
     </el-dialog>
 
@@ -389,6 +301,7 @@ import { fetchList, fetchPv, createArticle, updateUser, fetchActivities } from '
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
+
 
 const calendarTypeOptions = [
   { key: 'CN', display_name: 'China' },

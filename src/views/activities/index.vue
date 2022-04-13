@@ -1,129 +1,21 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input
-        v-model="listQuery.id"
-        placeholder="活动Id"
-        style="width: 200px"
-        class="filter-item"
-        @keyup.enter.native="handleFilter"
-      />
-      <!-- <el-select
-        v-model="listQuery.role"
-        placeholder="Role"
-        clearable
-        style="width: 90px"
-        class="filter-item"
-      >
-        <el-option v-for="item in roleOptions" :key="item.key" :label="item.key" :value="item.key" />
+      <!-- eslint-disable-next-line -->
+      <el-input v-model="listQuery.id" placeholder="活动Id" style="width: 200px" class="filter-item"
+        @keyup.enter.native="handleFilter" />
+      <el-input v-model="listQuery.title" placeholder="活动名称" style="width: 200px" class="filter-item" />
+      <el-select v-model="listQuery.sort" style="width: 140px" class="filter-item" @change="handleFilter">
+        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key" />
       </el-select>
-      <el-select
-        v-model="listQuery.permission"
-        placeholder="权限"
-        clearable
-        style="width: 90px"
-        class="filter-item"
-      >
-        <el-option
-          v-for="item in permissionOptions"
-          :key="item.key"
-          :label="item.key"
-          :value="item.key"
-        />
-      </el-select>-->
-      <!-- <el-select
-        v-model="listQuery.importance"
-        placeholder="Imp"
-        clearable
-        style="width: 90px"
-        class="filter-item"
-      >
-        <el-option
-          v-for="item in importanceOptions"
-          :key="item"
-          :label="item"
-          :value="item"
-        />
-      </el-select>-->
-      <!-- <el-select
-        v-model="listQuery.type"
-        placeholder="Type"
-        clearable
-        class="filter-item"
-        style="width: 130px"
-      >
-        <el-option
-          v-for="item in calendarTypeOptions"
-          :key="item.key"
-          :label="item.display_name + '(' + item.key + ')'"
-          :value="item.key"
-        />
-      </el-select>-->
-      <el-select
-        v-model="listQuery.sort"
-        style="width: 140px"
-        class="filter-item"
-        @change="handleFilter"
-      >
-        <el-option
-          v-for="item in sortOptions"
-          :key="item.key"
-          :label="item.label"
-          :value="item.key"
-        />
-      </el-select>
-      <el-button
-        v-waves
-        class="filter-item"
-        type="primary"
-        icon="el-icon-search"
-        @click="handleFilter"
-      >搜索</el-button>
-      <!-- <el-button
-        class="filter-item"
-        style="margin-left: 10px"
-        type="primary"
-        icon="el-icon-edit"
-        @click="handleCreate"
-      >
-        Add
-      </el-button>-->
-      <!-- <el-button
-        v-waves
-        :loading="downloadLoading"
-        class="filter-item"
-        type="primary"
-        icon="el-icon-download"
-        @click="handleDownload"
-      >Export</el-button>-->
-      <!-- <el-checkbox
-        v-model="showReviewer"
-        class="filter-item"
-        style="margin-left: 15px"
-        @change="tableKey = tableKey + 1"
-      >
-        reviewer
-      </el-checkbox>-->
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
     </div>
-
-    <el-table
-      :key="tableKey"
-      v-loading="listLoading"
-      :data="list"
-      border
-      fit
-      highlight-current-row
-      style="width: 100%"
-      @sort-change="sortChange"
-    >
-      <el-table-column
-        label="ID"
-        prop="id"
-        sortable="custom"
-        align="center"
-        width="80"
-        :class-name="getSortClass('id')"
-      >
+    <!-- eslint-disable-next-line -->
+    <el-table :key="tableKey" v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%"
+      @sort-change="sortChange">
+      <!-- eslint-disable-next-line -->
+      <el-table-column label="ID" prop="id" sortable="custom" align="center" width="80"
+        :class-name="getSortClass('id')">
         <template slot-scope="{ row }">
           <span>{{ row.id }}</span>
         </template>
@@ -133,12 +25,9 @@
       </el-table-column>
       <el-table-column label="链接" width="200" align="center">
         <template slot-scope="{ row }">
-          <el-button
-            v-clipboard:copy="$activityDomain + 'activity/' + row.id"
-            v-clipboard:success="clipboardSuccess"
-            type="primary"
-            icon="el-icon-document"
-          >复制</el-button>
+          <!-- eslint-disable-next-line -->
+          <el-button v-clipboard:copy="$activityDomain + 'activity/' + row.id" v-clipboard:success="clipboardSuccess"
+            type="primary" icon="el-icon-document">复制</el-button>
         </template>
       </el-table-column>
       <el-table-column label="报名费" align="center">
@@ -148,9 +37,10 @@
         <template slot-scope="{ row }">{{ row.description }}</template>
       </el-table-column>
       <el-table-column label="车牌前缀" width="200" align="center">
-        <template slot-scope="{ row }">{{ row.prefix }}</template>
+        <!-- <template slot-scope="{ row }">{{ row.prefix }}</template> -->
+        <template slot-scope="{ row }">{{ row.config.license_plate_number_prefix }}</template>
       </el-table-column>
-      <el-table-column label="分享后得券" width="200" align="center">
+      <el-table-column label="分享后得券(只会生成一张)" width="200" align="center">
         <template slot-scope="{ row }">{{ row.share_mode ? "给" : "不给" }}</template>
       </el-table-column>
       <el-table-column label="多级返利" width="200" align="center">
@@ -209,25 +99,85 @@
           <div>购买人数: +{{ row.offset.coupons }}</div>
           <div>关注人数: +{{ row.offset.participants }}</div>
         </template>
-      </el-table-column>
+      </el-table-column>0
       <el-table-column label="返利模式" align="center">
-        <template slot-scope="{ row }">{{ row.return_mode }}</template>
-      </el-table-column>
-      <el-table-column label="限制车牌" align="center" width="200">
         <template slot-scope="{ row }">
-          <div
-            v-for="(license_plate_number, i) in row.restricted_license_plate_numbers"
-            :key="i"
-            style="margin-bottom:2px"
-          >
-            {{ license_plate_number }}
-            <el-button
-              size="mini"
-              type="danger"
-              @click="removeRestrictedLicensePlateNumber(row, i)"
-            >移出</el-button>
+          <template v-if="row.return_mode == 'nothing'">
+            不返利
+          </template>
+          <template v-if="row.return_mode == '2level'">
+            2级返利
+          </template>
+          <template v-if="row.return_mode == 'leader'">
+            团长返利
+          </template>
+        </template>
+      </el-table-column>
+      <el-table-column label="用户可以自由输入车型" width="200" align="center">
+        <template slot-scope="{ row }">{{ row.config.allow_user_inputing_car_model ? "自由输入" : "限定车型" }}</template>
+      </el-table-column>
+      <el-table-column label="是否显示输入车牌号" width="200" align="center">
+        <template slot-scope="{ row }">{{ row.config.show_license_plate_number_field ? "显示" : "不显示" }}</template>
+      </el-table-column>
+      <el-table-column label="优惠券描述" width="200" align="center">
+        <template slot-scope="{ row }">{{ row.config.normal_coupon_description }}</template>
+      </el-table-column>
+      <el-table-column label="优惠券显示价格" width="200" align="center">
+        <template slot-scope="{ row }">{{ row.config.normal_coupon_value }}</template>
+      </el-table-column>
+      <el-table-column label="可分享的优惠券描述" width="200" align="center">
+        <template slot-scope="{ row }">{{ row.config.shared_coupon_description }}</template>
+      </el-table-column>
+      <el-table-column label="可分享的优惠券显示价格" width="200" align="center">
+        <template slot-scope="{ row }">{{ row.config.shared_coupon_value }}</template>
+      </el-table-column>
+
+      <el-table-column label="车型范围" align="center" class-name="small-padding fixed-width">
+        <template slot-scope="{ row }">
+          <div style="margin-bottom:5px">
+            <!-- <el-upload action="" :http-request="uploadFile" :limit="1" :on-exceed="fileExceed" :file-list="fileList"
+              :auto-upload="true" :show-file-list="false">
+              <el-button size="mini" type="primary">上传</el-button>
+            </el-upload> -->
+            <el-upload action="" :on-change="(file, fileList) => { return fileChange(file, fileList, row.id) }"
+              :limit="1" :on-exceed="fileExceed" :file-list="fileList" :auto-upload="false" :show-file-list="false">
+              <el-button size="mini" type="primary">上传</el-button>
+            </el-upload>
           </div>
-          <el-button type="primary" size="mini" @click="addRestrictedLicensePlateNumber(row)">添加</el-button>
+          <!-- <div style="margin-bottom:5px">
+            <el-button type="primary" size="mini" @click="uploadBrandCategory(row)">上传</el-button>
+          </div> -->
+          <div style="margin-bottom:5px">
+            <el-button type="danger" size="mini" @click="downloadBrandCategory(row)">下载</el-button>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="限制车牌数量" align="center">
+        <template slot-scope="{ row }">
+          {{
+            row.restricted_license_plate_numbers ? row.restricted_license_plate_numbers.filter((i) => i !== null).length :
+              0
+          }}
+        </template>
+      </el-table-column>
+
+      <el-table-column label="限制车牌" align="center">
+        <template slot-scope="{ row }">
+          <!-- <div v-for="(license_plate_number, i) in row.restricted_license_plate_numbers" :key="i"
+            style="margin-bottom:2px">
+            {{ license_plate_number }}
+            <el-button size="mini" type="danger" @click="removeRestrictedLicensePlateNumber(row, i)">移出</el-button>
+          </div> -->
+          <div style="margin-bottom:5px">
+            <el-upload action="" :on-change="(file, fileList1) => { return fileChange1(file, fileList1, row.id) }"
+              :limit="1" :on-exceed="fileExceed" :file-list="fileList1" :auto-upload="false" :show-file-list="false">
+              <el-button size="mini" type="primary">上传</el-button>
+            </el-upload>
+          </div>
+          <div style="margin-bottom:5px">
+            <el-button type="danger" size="mini" @click="downloadRestrictedLicensePlateNumber(row)">下载</el-button>
+          </div>
+          <!-- <el-button type="primary" size="mini" @click="addRestrictedLicensePlateNumber(row)">添加</el-button> -->
         </template>
       </el-table-column>
       <!-- <el-table-column label="海报" align="center" width="120px">
@@ -272,23 +222,15 @@
         </template>
       </el-table-column>-->
 
-      <el-table-column label="Actions" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="{ row, $index }">
           <div style="margin-bottom:5px">
             <el-button type="primary" size="mini" @click="handleUpdate(row, $index)">编辑</el-button>
           </div>
           <div>
             <template>
-              <el-popconfirm
-                title="Are you sure to delete this?"
-                @onConfirm="handleDelete(row, $index)"
-              >
-                <el-button
-                  v-if="row.status != 'deleted'"
-                  slot="reference"
-                  size="mini"
-                  type="danger"
-                >删除</el-button>
+              <el-popconfirm title="Are you sure to delete this?" @onConfirm="handleDelete(row, $index)">
+                <el-button v-if="row.status != 'deleted'" slot="reference" size="mini" type="danger">删除</el-button>
               </el-popconfirm>
             </template>
           </div>
@@ -319,115 +261,107 @@
         </template>
       </el-table-column>
     </el-table>
-
-    <pagination
-      v-show="total > 0"
-      :total="total"
-      :page.sync="listQuery.page"
-      :limit.sync="listQuery.limit"
-      @pagination="getList"
-    />
+    <!-- eslint-disable-next-line -->
+    <pagination v-show="total > 0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit"
+      @pagination="getList" />
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form
-        ref="dataForm"
-        :rules="rules"
-        :model="temp"
-        label-position="left"
-        label-width="70px"
-        style="width: 400px; margin-left: 50px"
-      >
-        <el-form-item label-width="auto" label="标题" prop="title">
+      <!-- eslint-disable-next-line -->
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="70px"
+        style="width: 400px; margin-left: 50px">
+        <el-form-item label-width="120px" label="标题" prop="title">
           <el-input v-model="temp.title" />
         </el-form-item>
-        <el-form-item label-width="auto" label="介绍" prop="description">
-          <el-input v-model="temp.description" />
+        <el-form-item label-width="120px" label="介绍" prop="description">
+          <el-input type="textarea" v-model="temp.description" />
         </el-form-item>
-        <el-form-item label-width="auto" label="报名费" prop="signing_up_fee">
+        <el-form-item label-width="120px" label="报名费" prop="signing_up_fee">
           <el-input v-model.trim="temp.signing_up_fee" />
         </el-form-item>
-        <el-form-item label-width="auto" label="地点" prop="address">
+        <el-form-item label-width="120px" label="地点" prop="address">
           <el-input v-model="temp.address" />
         </el-form-item>
-        <el-form-item label-width="auto" label="定位" prop="location">
+        <el-form-item label-width="12 0px" label="定位" prop="location">
           <el-input v-model.trim="temp.location.longitude" />
           <el-input v-model.trim="temp.location.latitude" />
         </el-form-item>
-        <el-form-item label-width="auto" label="门店" prop="shop">
+        <el-form-item label-width="120px" label="门店" prop="shop">
           <el-input v-model="temp.shop" />
         </el-form-item>
-        <el-form-item label-width="auto" label="1级返利" prop="shop">
+        <el-form-item label-width="120px" label="1级返利" prop="shop">
           <el-input v-model.trim="temp.return_profit_rate.level1" />
         </el-form-item>
-        <el-form-item label-width="auto" label="2级返利" prop="shop">
+        <el-form-item label-width="120px" label="2级返利" prop="shop">
           <el-input v-model.trim="temp.return_profit_rate.level2" />
         </el-form-item>
-        <el-form-item label-width="auto" label="团长返利" prop="shop">
+        <el-form-item label-width="120px" label="团长返利" prop="shop">
           <el-input v-model.trim="temp.return_profit_rate.leader" />
         </el-form-item>
-        <el-form-item label-width="auto" label="分享后给券" prop="shop">
+        <el-form-item label-width="120px" label="分享后给券" prop="shop">
           <!-- <el-input v-model="temp.share_mode" /> -->
           <el-switch v-model="temp.share_mode" />
         </el-form-item>
-        <el-form-item label-width="auto" label="车牌前缀" prop="shop">
-          <el-input v-model="temp.prefix" />
+        <el-form-item label-width="120px" label="可用户可自由输入车型" prop="shop">
+          <!-- <el-input v-model="temp.share_mode" /> -->
+          <el-switch v-model="temp.config.allow_user_inputing_car_model" />
         </el-form-item>
-        <el-form-item label-width="auto" label="主办方电话" prop="tel">
+        <el-form-item label-width="120px" label="显示车牌输入框" prop="shop">
+          <!-- <el-input v-model="temp.share_mode" /> -->
+          <el-switch v-model="temp.config.show_license_plate_number_field" />
+        </el-form-item>
+        <el-form-item label-width="120px" label="车牌前缀" prop="shop">
+          <el-input v-model="temp.config.license_plate_number_prefix" />
+        </el-form-item>
+        <el-form-item label-width="120px" label="正常优惠券显示价格" prop="shop">
+          <el-input v-model="temp.config.normal_coupon_value" />
+        </el-form-item>
+        <el-form-item label-width="120px" label="正常优惠券描述" prop="shop">
+          <el-input v-model="temp.config.normal_coupon_description" />
+        </el-form-item>
+        <el-form-item label-width="120px" label="可分享优惠券显示价格" prop="shop">
+          <el-input v-model="temp.config.shared_coupon_value" />
+        </el-form-item>
+        <el-form-item label-width="120px" label="可分享优惠券描述" prop="shop">
+          <el-input v-model="temp.config.shared_coupon_description" />
+        </el-form-item>
+        <el-form-item label-width="120px" label="主办方电话" prop="tel">
           <el-input v-model="temp.tel" />
         </el-form-item>
 
-        <el-form-item label-width="auto" label="开始报名时间" prop="end_at">
-          <el-date-picker
-            v-model="temp.start_signing_up_at"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            type="datetime"
-            placeholder="Select date and time"
-          />
+        <el-form-item label-width="120px" label="开始报名时间" prop="end_at">
+          <!-- eslint-disable-next-line -->
+          <el-date-picker v-model="temp.start_signing_up_at" value-format="yyyy-MM-dd HH:mm:ss" type="datetime"
+            placeholder="Select date and time" />
         </el-form-item>
 
-        <el-form-item label-width="auto" label="报名截止时间" prop="end_at">
-          <el-date-picker
-            v-model="temp.end_at"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            type="datetime"
-            placeholder="Select date and time"
-          />
+        <el-form-item label-width="120px" label="报名截止时间" prop="end_at">
+          <!-- eslint-disable-next-line -->
+          <el-date-picker v-model="temp.end_at" value-format="yyyy-MM-dd HH:mm:ss" type="datetime"
+            placeholder="Select date and time" />
         </el-form-item>
 
-        <el-form-item label-width="auto" label="活动举办时间" prop="end_at">
-          <el-date-picker
-            v-model="temp.start_at"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            type="datetime"
-            placeholder="Select date and time"
-          />
+        <el-form-item label-width="120px" label="活动举办时间" prop="end_at">
+          <!-- eslint-disable-next-line -->
+          <el-date-picker v-model="temp.start_at" value-format="yyyy-MM-dd HH:mm:ss" type="datetime"
+            placeholder="Select date and time" />
         </el-form-item>
-        <el-form-item label-width="auto" label="活动结束时间" prop="end_at">
-          <el-date-picker
-            v-model="temp.end_at"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            type="datetime"
-            placeholder="Select date and time"
-          />
+        <el-form-item label-width="120px" label="活动结束时间" prop="end_at">
+          <!-- eslint-disable-next-line -->
+          <el-date-picker v-model="temp.end_at" value-format="yyyy-MM-dd HH:mm:ss" type="datetime"
+            placeholder="Select date and time" />
         </el-form-item>
 
-        <el-form-item label-width="auto" label="核销开始时间" prop="allow_to_use_at">
-          <el-date-picker
-            v-model="temp.allow_to_use_at"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            type="datetime"
-            placeholder="Select date and time"
-          />
+        <el-form-item label-width="120px" label="核销开始时间" prop="allow_to_use_at">
+          <!-- eslint-disable-next-line -->
+          <el-date-picker v-model="temp.allow_to_use_at" value-format="yyyy-MM-dd HH:mm:ss" type="datetime"
+            placeholder="Select date and time" />
         </el-form-item>
 
-        <el-form-item label-width="auto" label="优惠券失效于" prop="expire_at">
-          <el-date-picker
-            v-model="temp.expire_at"
-            value-format="yyyy-MM-dd HH:mm:ss"
-            type="datetime"
-            placeholder="Select date and time"
-          />
+        <el-form-item label-width="120px" label="优惠券失效于" prop="expire_at">
+          <!-- eslint-disable-next-line -->
+          <el-date-picker v-model="temp.expire_at" value-format="yyyy-MM-dd HH:mm:ss" type="datetime"
+            placeholder="Select date and time" />
         </el-form-item>
-        <el-form-item label-width="auto" label="虚拟人数" prop="location">
+        <el-form-item label-width="120px" label="虚拟人数" prop="location">
           <el-input v-model.number.trim="temp.offset.coupons" />
           <el-input v-model.number.trim="temp.offset.participants" />
         </el-form-item>
@@ -439,7 +373,7 @@
             <el-radio label="leader">团长</el-radio>
           </el-radio-group>
         </el-form-item>
-        <!-- <el-form-item label-width="auto" label="视频封面" prop="video_thumbnail">
+        <!-- <el-form-item label-width="120px" label="视频封面" prop="video_thumbnail">
           <el-input v-model="temp.video_thumbnail" />
           <el-image style="width: 200px" :src="$backend + temp.video_thumbnail" fit="fit" />
         </el-form-item>-->
@@ -475,10 +409,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">Cancel</el-button>
-        <el-button
-          type="primary"
-          @click="dialogStatus === 'create' ? createData() : updateData()"
-        >Confirm</el-button>
+        <el-button type="primary" @click="dialogStatus === 'create' ? createData() : updateData()">Confirm</el-button>
       </div>
     </el-dialog>
 
@@ -586,6 +517,8 @@ import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 import clipboard from '@/directive/clipboard/index.js'
+import axios from 'axios'
+import request from '@/utils/request'
 
 const calendarTypeOptions = [
   { key: 'CN', display_name: 'China' },
@@ -630,6 +563,8 @@ export default {
   },
   data() {
     return {
+      fileList: [],
+      fileList1: [],
       tableKey: 0,
       list: null,
       total: 0,
@@ -665,7 +600,8 @@ export default {
         status: 'published',
         location: {},
         offset: {},
-        return_profit_rate: {}
+        return_profit_rate: {},
+        config: {}
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -703,6 +639,102 @@ export default {
     this.getList()
   },
   methods: {
+    fileChange(file, fileList, id) {
+      this.fileList = fileList.slice(-3)
+      this.uploadFile(file, fileList, id)
+    },
+    fileExceed() {
+
+    },
+    fileChange1(file, fileList, id) {
+      this.fileList1 = fileList.slice(-3)
+      this.uploadFile1(file, fileList, id)
+    },
+    // 自定义上传
+    uploadFile1(item, b, activity_id) {
+      console.log(item, b, activity_id)
+      const form = new FormData()
+      if (item.raw) {
+        form.append('file', item.raw)
+        request({
+          url: this.$api + `/vue-admin-template/activity/${activity_id}/restricted/license_plate_number/import`,
+          // url: this.$api + `/store`,
+          method: 'POST',
+          data: form
+        }).then(res => {
+          console.log(res)
+          this.$message({
+            message: '上传成功',
+            type: 'success'
+          })
+          this.fileList1 = []
+        }).catch(err => {
+          console.log(err)
+          this.fileList = []
+        })
+      }
+    },
+    // 自定义上传
+    uploadFile(item, b, activity_id) {
+      console.log(item, b, activity_id)
+      const form = new FormData()
+      if (item.raw) {
+        form.append('file', item.raw)
+        request({
+          url: this.$api + `/vue-admin-template/activity/${activity_id}/config/brand/category/import`,
+          // url: this.$api + `/store`,
+          method: 'POST',
+          data: form
+        }).then(res => {
+          console.log(res)
+          this.$message({
+            message: '上传成功',
+            type: 'success'
+          })
+          this.fileList = []
+        }).catch(err => {
+          console.log(err)
+          this.fileList = []
+        })
+      }
+    },
+    uploadBrandCategory(row) { console.log(row) },
+    downloadRestrictedLicensePlateNumber(row) {
+      if (row.id) {
+        this.downloadLoading = true
+        axios({
+          url: this.$api + `/vue-admin-template/activity/${row.id}/restricted/license_plate_number/export`, // your url
+          method: 'GET',
+          responseType: 'blob' // important
+        }).then((response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data]))
+          const link = document.createElement('a')
+          link.href = url
+          link.setAttribute('download', 'brand category.xlsx') // or any other extension
+          document.body.appendChild(link)
+          link.click()
+          this.downloadLoading = false
+        })
+      }
+    },
+    downloadBrandCategory(row) {
+      if (row.id) {
+        this.downloadLoading = true
+        axios({
+          url: this.$api + `/vue-admin-template/activity/${row.id}/config/brand/category/export`, // your url
+          method: 'GET',
+          responseType: 'blob' // important
+        }).then((response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data]))
+          const link = document.createElement('a')
+          link.href = url
+          link.setAttribute('download', 'brand category.xlsx') // or any other extension
+          document.body.appendChild(link)
+          link.click()
+          this.downloadLoading = false
+        })
+      }
+    },
     clipboardSuccess() {
       this.$message({
         message: '复制成功',
@@ -786,7 +818,7 @@ export default {
     },
     handleUpdate(row, index) {
       this.temp = Object.assign({}, row) // copy obj
-      // console.log(this.temp)
+      console.log(this.temp)
       // this.temp.timestamp = new Date(this.temp.timestamp)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
