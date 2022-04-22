@@ -131,6 +131,15 @@
       <el-table-column label="可分享的优惠券显示价格" width="200" align="center">
         <template slot-scope="{ row }">{{ row.config.shared_coupon_value }}</template>
       </el-table-column>
+      <el-table-column label="我的卡券中键描述" width="200" align="center">
+        <template slot-scope="{ row }">{{ row.config.my_coupon_middle_button }}</template>
+      </el-table-column>
+      <el-table-column label="我的卡券右键描述" width="200" align="center">
+        <template slot-scope="{ row }">{{ row.config.my_coupon_right_button }}</template>
+      </el-table-column>
+      <el-table-column label="我的海报下方描述" width="200" align="center">
+        <template slot-scope="{ row }">{{ row.config.poster_desc }}</template>
+      </el-table-column>
 
       <el-table-column label="车型范围" align="center" class-name="small-padding fixed-width">
         <template slot-scope="{ row }">
@@ -322,6 +331,15 @@
         </el-form-item>
         <el-form-item label-width="120px" label="可分享优惠券描述" prop="shop">
           <el-input v-model="temp.config.shared_coupon_description" />
+        </el-form-item>
+        <el-form-item label-width="120px" label="我的卡券中键" prop="description">
+          <el-input type="textarea" v-model="temp.config.my_coupon_middle_button" />
+        </el-form-item>
+        <el-form-item label-width="120px" label="我的卡券右键" prop="description">
+          <el-input type="textarea" v-model="temp.config.my_coupon_right_button" />
+        </el-form-item>
+        <el-form-item label-width="120px" label="我的海报描述" prop="description">
+          <el-input type="textarea" v-model="temp.config.poster_desc" />
         </el-form-item>
         <el-form-item label-width="120px" label="主办方电话" prop="tel">
           <el-input v-model="temp.tel" />
